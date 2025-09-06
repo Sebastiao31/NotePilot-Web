@@ -11,6 +11,10 @@ export function AppHeaderTitle() {
     title = "Folders"
   } else if (pathname?.startsWith("/all-notes")) {
     title = "All Notes"
+  } else if (pathname?.startsWith("/settings")) {
+    title = "Settings"
+  } else if (pathname?.startsWith("/help")) {
+    title = "Help"
   } else {
     title = ""
   }

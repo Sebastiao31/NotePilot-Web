@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { AppHeaderTitle } from "@/components/app-header-title"
+import { AuthGuard } from "@/components/auth-guard"
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -17,7 +18,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          {children}
+          <AuthGuard>
+            {children}
+          </AuthGuard>
         </div>
       </SidebarInset>
     </SidebarProvider>
