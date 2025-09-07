@@ -8,6 +8,8 @@ import NoFolders from "@/components/no-folders";
 import FoldersList from "@/components/folders-list";
 import CreateFolderButton from "@/components/ui/create-folder-button";
 import { useFolders } from "@/hooks/use-folders";
+import NotesTable from "@/components/notes-table";
+import { Input } from "@/components/ui/input";
 
 export default function Page() {
   const { folders, loading } = useFolders()
@@ -37,6 +39,23 @@ export default function Page() {
           </div>
         )}
       </div>
+
+      <div className="mt-12 ">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold">All Notes</h1>
+          <div className="flex items-center py-4">
+        <Input
+          placeholder="Search notes"
+          
+          className="max-w-sm"
+        />
+        </div>
+      </div>
+        </div>
+
+        <div>
+          <NotesTable />
+        </div>
     </main>
   )
 }

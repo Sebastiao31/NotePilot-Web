@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth-provider"
+import OnboardingGate from "./onboarding-gate"
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -24,7 +25,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (!user) return null
 
-  return <>{children}</>
+  return (
+    <OnboardingGate>
+      {children}
+    </OnboardingGate>
+  )
 }
 
 
