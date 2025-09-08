@@ -44,10 +44,10 @@ const FoldersList = () => {
                 className="h-16 w-16 sm:h-20 sm:w-20 transition-transform group-hover:scale-[1.02]"
               />
               <div className="flex flex-col items-center leading-tight">
-                <div className="text-sm sm:text-base font-medium text-foreground">
+                <div className="text-sm sm:text-base font-medium text-foreground max-w-[120px] w-full truncate text-center">
                   {f.name || 'Folder'}
                 </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">
+                <div className="text-xs sm:text-sm text-muted-foreground max-w-[160px] w-full truncate text-center">
                   {(f as any).notesCount ?? 0} Notes
                 </div>
               </div>

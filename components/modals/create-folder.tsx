@@ -57,8 +57,8 @@ const CreateFolderDialog = ({ children }: Props) => {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="bg-black/70 backdrop-blur-sm fixed inset-0 z-50" />
-        <Dialog.Content className="bg-background text-foreground fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-4xl border outline-none">
+        <Dialog.Overlay className="bg-black/50 backdrop-blur-sm fixed inset-0 z-50" />
+        <Dialog.Content className="bg-background text-foreground fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border outline-none">
           <div className="flex items-start justify-between p-5 ">
             <div className="flex flex-col gap-2 ">
               <Dialog.Title className="text-2xl font-semibold">Create Folder</Dialog.Title>

@@ -29,17 +29,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
   SidebarRail,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "./ui/button"
-import { IconInnerShadowTop, IconListDetails, IconFolders, IconPlus, IconMicrophoneFilled, IconDotsCircleHorizontal, IconDots, IconLogout, IconSettings, IconHelp } from "@tabler/icons-react"
+import { IconInnerShadowTop, IconListDetails, IconFolders, IconSquareFilled, IconPlus, IconMicrophoneFilled, IconDotsCircleHorizontal, IconDots, IconLogout, IconSettings, IconHelp } from "@tabler/icons-react"
 import { ChevronRight } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { useAuth } from "./auth-provider"
 import { useUserData } from "@/hooks/use-user-data"
+import { useFolders } from "@/hooks/use-folders"
+import CreateFolderDialog from "@/components/modals/create-folder"
+import ChooseNewNote from "@/components/modals/choose-new-note"
 
 // This is sample data.
 const data = {
@@ -94,12 +99,14 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const isFoldersActive = pathname?.startsWith("/all-notes/folders")
-  const isAllNotesActive = pathname?.startsWith("/all-notes") && !isFoldersActive
+  const isInFoldersSection = pathname?.startsWith("/all-notes/folders")
+  const isFoldersActive = pathname === "/all-notes/folders"
+  const isAllNotesActive = pathname?.startsWith("/all-notes") && !isInFoldersSection
   const isSettingsActive = pathname === "/settings"
   const isHelpActive = pathname === "/help"
   const { signOutUser } = useAuth()
   const { userData } = useUserData()
+  const { folders } = useFolders()
 
   return (
     <Sidebar>
@@ -125,9 +132,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-              <SidebarMenuButton variant="dots" size="dots">
-                <IconDots className="!size-6 " />
-              </SidebarMenuButton>
+              <ChooseNewNote>
+                <SidebarMenuButton variant="dots" size="dots">
+                  <IconDots className="!size-6 " />
+                </SidebarMenuButton>
+              </ChooseNewNote>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroup>
@@ -145,7 +154,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <Collapsible asChild className="group/collapsible" defaultOpen={!!isFoldersActive}>
+            <Collapsible asChild className="group/collapsible" defaultOpen={!!isInFoldersSection}>
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton size="lg" isActive={!!isFoldersActive}>
@@ -156,7 +165,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {/* Add folder links here */}
+                    {folders.map((f) => (
+                      <SidebarMenuSubItem key={f.id} >
+                        <SidebarMenuButton size="lg" asChild isActive={pathname === `/all-notes/folders/${f.id}`}>
+                          <Link href={`/all-notes/folders/${f.id}`}>
+                            <IconSquareFilled className="!size-3" style={{ color: f.color }} />
+                            <span className="text-black text-lg">{f.name || "Folder"}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                    <SidebarMenuSubItem>
+                      <CreateFolderDialog>
+                        <SidebarMenuButton size="lg">
+                          <IconPlus className="!size-4 text-muted-foreground" />
+                          <span className="text-gray-500 text-md">Create Folder</span>
+                        </SidebarMenuButton>
+                      </CreateFolderDialog>
+                    </SidebarMenuSubItem>
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
