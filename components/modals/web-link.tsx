@@ -17,7 +17,6 @@ export default function WebLinkModal({ open, onOpenChange }: { open: boolean; on
         <DialogHeader>
         
           <DialogTitle className="text-2xl flex items-center gap-2">
-            <IconChevronLeft className="size-6" onClick={() => onOpenChange(false)} />
             Web Link
           </DialogTitle>
         </DialogHeader>

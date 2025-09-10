@@ -15,7 +15,6 @@ export default function UploadFileModal({ open, onOpenChange }: { open: boolean;
         <DialogHeader>
         
           <DialogTitle className="text-2xl flex items-center gap-2">
-            <IconChevronLeft className="size-6" onClick={() => onOpenChange(false)} />
             Upload File/Text
           </DialogTitle>
         </DialogHeader>

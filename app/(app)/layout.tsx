@@ -1,28 +1,36 @@
+"use client"
+
 import React from 'react'
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { AppHeaderTitle } from "@/components/app-header-title"
 import { AuthGuard } from "@/components/auth-guard"
+import { SidebarRight } from "@/components/chat-panel"
+import { usePathname } from "next/navigation"
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname()
+  const isNoteDetail = pathname?.startsWith("/all-notes/notes/")
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 border-b shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+        <header className="flex h-16 border-b shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sticky top-0 z-20 bg-background">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
             <AppHeaderTitle />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-8">
+        <div className={`flex flex-1 flex-col gap-4 ${isNoteDetail ? "p-0" : "p-8"}`}>
           <AuthGuard>
             {children}
           </AuthGuard>
         </div>
+        
       </SidebarInset>
+      <SidebarRight />
     </SidebarProvider>
   )
 }

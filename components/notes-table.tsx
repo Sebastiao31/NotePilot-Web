@@ -14,6 +14,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, Link, MoreHorizontal } from "lucide-react"
+import NextLink from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -37,42 +38,9 @@ import {
 } from "@/components/ui/table"
 import { IconFolderUp, IconTrash } from "@tabler/icons-react"
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    createdAt: 316,
-    folder: "success",
-    note: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    createdAt: 242,
-    folder: "success",
-    note: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    createdAt: 837,
-    folder: "processing",
-    note: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    createdAt: 874,
-    folder: "success",
-    note: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    createdAt: 721,
-    folder: "failed",
-    note: "carmella@example.com",
-  },
-]
-
 export type Payment = {
   id: string
-  createdAt: number
+  createdAt: string
   note: string
   folder: string
 }
@@ -104,7 +72,12 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "note",
     header: "Note",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("note")}</div>
+      <NextLink
+        href={`/all-notes/notes/${row.original.id}`}
+        className="text-primary hover:underline"
+      >
+        <span className="capitalize">{row.getValue("note")}</span>
+      </NextLink>
     ),
   },
   {
@@ -155,7 +128,11 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ]
 
-export default function NotesTable() {
+type NotesTableProps = {
+  data: Payment[]
+}
+
+export default function NotesTable({ data }: NotesTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

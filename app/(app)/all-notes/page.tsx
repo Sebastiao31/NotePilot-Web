@@ -10,6 +10,7 @@ import CreateFolderButton from "@/components/ui/create-folder-button";
 import { useFolders } from "@/hooks/use-folders";
 import NotesTable from "@/components/notes-table";
 import { Input } from "@/components/ui/input";
+import { MOCK_NOTES } from "@/constants/mock-notes";
 
 export default function Page() {
   const { folders, loading } = useFolders()
@@ -54,7 +55,14 @@ export default function Page() {
         </div>
 
         <div>
-          <NotesTable />
+          <NotesTable
+            data={MOCK_NOTES.map((n) => ({
+              id: n.id,
+              note: n.title,
+              folder: n.folder,
+              createdAt: new Date(n.date).toLocaleDateString(),
+            }))}
+          />
         </div>
     </main>
   )

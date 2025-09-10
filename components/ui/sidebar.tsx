@@ -31,6 +31,8 @@ const SIDEBAR_WIDTH = "18rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
+const RESIZABLE_MIN_WIDTH_PX = 240
+const RESIZABLE_MAX_WIDTH_PX = 640
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -160,10 +162,21 @@ function Sidebar({
   ...props
 }: React.ComponentProps<"div"> & {
   side?: "left" | "right"
-  variant?: "sidebar" | "floating" | "inset"
+  variant?: "sidebar" | "floating" | "inset" | "resizable"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const isResizable = variant === "resizable"
+  const storageKey = React.useMemo(() => `${side}-sidebar-width`, [side])
+  const [resizableWidth, setResizableWidth] = React.useState<string | null>(null)
+  const isResizingRef = React.useRef(false)
+  React.useEffect(() => {
+    if (!isResizable) return
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) setResizableWidth(saved)
+    } catch {}
+  }, [isResizable, storageKey])
 
   if (collapsible === "none") {
     return (
@@ -213,12 +226,14 @@ function Sidebar({
       data-variant={variant}
       data-side={side}
       data-slot="sidebar"
+      style={isResizable && resizableWidth ? ({ ["--sidebar-width"]: resizableWidth } as React.CSSProperties) : undefined}
     >
       {/* This is what handles the sidebar gap on desktop */}
       <div
         data-slot="sidebar-gap"
         className={cn(
-          "relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear",
+          "relative w-(--sidebar-width) bg-transparent transition-[width] ease-linear",
+          isResizable && isResizingRef.current ? "duration-0" : "duration-200",
           "group-data-[collapsible=offcanvas]:w-0",
           "group-data-[side=right]:rotate-180",
           variant === "floating" || variant === "inset"
@@ -229,7 +244,8 @@ function Sidebar({
       <div
         data-slot="sidebar-container"
         className={cn(
-          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
+          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] ease-linear md:flex",
+          isResizable && isResizingRef.current ? "duration-0" : "duration-200",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
@@ -241,6 +257,53 @@ function Sidebar({
         )}
         {...props}
       >
+        {isResizable && (
+          <div
+            data-slot="sidebar-resize-handle"
+            title="Resize sidebar"
+            onMouseDown={(e) => {
+              e.preventDefault()
+              isResizingRef.current = true
+              document.body.classList.add("select-none")
+              document.body.style.cursor = "col-resize"
+              let raf = 0
+              const onMove = (ev: MouseEvent) => {
+                if (raf) return
+                raf = requestAnimationFrame(() => {
+                  raf = 0
+                  let next = 0
+                  if (side === "right") {
+                    next = window.innerWidth - ev.clientX
+                  } else {
+                    next = ev.clientX
+                  }
+                  next = Math.max(RESIZABLE_MIN_WIDTH_PX, Math.min(RESIZABLE_MAX_WIDTH_PX, next))
+                  const value = `${next}px`
+                  document.documentElement.style.setProperty('--sidebar-width', value)
+                  setResizableWidth(value)
+                })
+              }
+              const onUp = () => {
+                isResizingRef.current = false
+                document.body.classList.remove("select-none")
+                document.body.style.cursor = ""
+                document.removeEventListener("mousemove", onMove)
+                document.removeEventListener("mouseup", onUp)
+                try {
+                  if (resizableWidth) {
+                    localStorage.setItem(storageKey, resizableWidth)
+                  }
+                } catch {}
+              }
+              document.addEventListener("mousemove", onMove)
+              document.addEventListener("mouseup", onUp)
+            }}
+            className={cn(
+              "absolute inset-y-0 w-1 cursor-col-resize z-20 hover:w-1.5",
+              side === "right" ? "left-0" : "right-0"
+            )}
+          />
+        )}
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
