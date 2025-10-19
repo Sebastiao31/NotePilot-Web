@@ -33,6 +33,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { SignedIn, UserButton } from "@clerk/nextjs"
 
 const data = {
   user: {
@@ -87,6 +88,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <NavUser user={data.user} />
+         
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>

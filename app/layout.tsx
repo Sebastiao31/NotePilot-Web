@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { shadcn } from "@clerk/themes";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -23,12 +25,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider 
+    appearance={{
+      baseTheme: shadcn,
+      
+    }}
+    >
+      <html lang="en">
+        <body
+          className={`${inter.variable} ${geistMono.variable} antialiased`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

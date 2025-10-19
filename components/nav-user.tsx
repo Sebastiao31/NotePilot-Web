@@ -29,6 +29,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { SignedIn, UserButton, useClerk } from "@clerk/nextjs"
 
 export function NavUser({
   user,
@@ -40,6 +41,7 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const { signOut } = useClerk()
 
   return (
     <SidebarMenu>
@@ -50,10 +52,9 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:cursor-pointer"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
+              <SignedIn >
+                <UserButton/>
+              </SignedIn>
               <div className="grid flex-1 text-left text-md leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
               </div>
@@ -72,10 +73,7 @@ export function NavUser({
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
+                
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -101,7 +99,11 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={() => {
+                void signOut({ redirectUrl: "/" })
+              }}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>
