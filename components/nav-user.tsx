@@ -4,11 +4,16 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
+  CircleUserRound,
   CreditCard,
+  Info,
   LogOut,
+  Megaphone,
+  Settings,
   Sparkles,
 } from "lucide-react"
 
+import React, { useState } from "react"
 import {
   Avatar,
   AvatarFallback,
@@ -29,7 +34,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { SignedIn, UserButton, useClerk } from "@clerk/nextjs"
+import { SignedIn, UserButton, useClerk, useUser } from "@clerk/nextjs"
+import SettingsDialog from "@/modals/settings"
 
 export function NavUser({
   user,
@@ -42,6 +48,14 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const { signOut } = useClerk()
+  const { user: signedInUser } = useUser()
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const displayEmail =
+    signedInUser?.primaryEmailAddress?.emailAddress ||
+    signedInUser?.emailAddresses?.[0]?.emailAddress ||
+    user.email
+
+  const displayName = signedInUser?.fullName || displayEmail
 
   return (
     <SidebarMenu>
@@ -55,8 +69,9 @@ export function NavUser({
               <SignedIn >
                 <UserButton/>
               </SignedIn>
-              <div className="grid flex-1 text-left text-md leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+              <div className="grid flex-1 text-left leading-tight">
+                <span className="truncate text-md font-medium">{displayName}</span>
+                <span className="text-xs text-muted-foreground">FREE</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -67,35 +82,33 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                
-              </div>
-            </DropdownMenuLabel>
+           
+           <DropdownMenuLabel>
+                <div className="flex items-center gap-2">
+                  <CircleUserRound className="size-5 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground truncate">{displayEmail}</span>
+                </div>
+              </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              
+              
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+                  <Sparkles />
+                  Upgrade to Pro
+                </DropdownMenuItem>
+              
               <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
+                <Megaphone />
+                Feedback
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Bell />
-                Notifications
+                <Info />
+                Help
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setIsSettingsOpen(true)}>
+                <Settings />
+                Settings
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -109,6 +122,7 @@ export function NavUser({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
       </SidebarMenuItem>
     </SidebarMenu>
   )

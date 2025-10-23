@@ -7,6 +7,7 @@ import {
   CirclePlus,
   Command,
   Files,
+  Search,
   Frame,
   Info,
   LifeBuoy,
@@ -34,6 +35,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { SignedIn, UserButton } from "@clerk/nextjs"
+import Image from "next/image"
 
 const data = {
   user: {
@@ -42,12 +44,7 @@ const data = {
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
-    {
-      title: "Create Note",
-      url: "#",
-      icon: CirclePlus,
 
-    },
     {
       title: "Notes",
       url: "#",
@@ -55,11 +52,11 @@ const data = {
 
     },
     {
-      title: "AI Chat",
+      title: "Search Notes",
       url: "#",
-      icon: MessageCircle,
-
-    },
+      icon: Search,
+    }
+  
 
   ],
   navSecondary: [
@@ -87,14 +84,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <NavUser user={data.user} />
-         
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild className="w-fit">
+              <a href="#">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Image src="/Logo-light.svg" alt="logo" width={24} height={24} />
+                </div>
+                
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
      
     </Sidebar>
   )
