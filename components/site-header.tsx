@@ -6,26 +6,14 @@ import { BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, Br
 
 export function SiteHeader() {
     return (
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b">
+        <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 border-b bg-background">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
+            <SidebarTrigger className="-ml-1 md:hidden" />
             <Separator
               orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
+              className="mr-2 data-[orientation=vertical]:h-4 md:hidden"
             />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <span className="text-sm font-medium">Note name</span>
           </div>
         </header>
         

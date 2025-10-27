@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronRight, ChevronsRight, CirclePlus, Folder, MoreHorizontal, MoreVertical, Share, Trash2, type LucideIcon } from "lucide-react"
-import { IconBrandYoutubeFilled, IconMicrophoneFilled, IconPlus, IconSquareRoundedPlusFilled, IconUpload, IconWorld } from "@tabler/icons-react"
+import { IconBrandYoutubeFilled, IconCirclePlus, IconFileMusicFilled, IconFileUploadFilled, IconLetterCase, IconLetterCaseUpper, IconMicrophoneFilled, IconPlus, IconSquareRoundedPlusFilled, IconUpload, IconWorld } from "@tabler/icons-react"
 import {
   Collapsible,
   CollapsibleContent,
@@ -67,86 +67,82 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarMenu>
-      
-
       <Menubar>
-        <MenubarMenu >
-          <MenubarTrigger className="hover:cursor-pointer w-full">
-            <div className="flex items-center gap-2">
-                <span>
-                  <CirclePlus className="size-4" />
-                </span>
-                <span className="text-sm group-data-[state=collapsed]:hidden">Create Note</span>
-              </div>
-              <ChevronRight className="ml-auto size-4" />
+      <MenubarMenu>
+        <MenubarTrigger className="w-full gap-2">
+          <span>
+            <IconCirclePlus className="size-4" />
+          </span>
+          <span className="group-data-[state=collapsed]:hidden">
+            Create Note
+          </span>
           </MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center rounded-md bg-badge-blue-foreground p-2">
-                  <IconPlus className="size-4 text-badge-blue" />
-                </div>
-              <div className="flex flex-col gap-0 items-start">
-                Blank Note
-                <span className="text-xs text-muted-foreground">
-                  Create a new blank note
-                </span>
+        <MenubarContent>
+          <MenubarItem>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-badge-red-foreground rounded-md">
+                <IconBrandYoutubeFilled className="size-4 text-badge-red" />
               </div>
+              <div className="flex flex-col pr-2">
+                <span>Youtube</span>
+                <span className="text-xs text-muted-foreground">Create note from youtube video</span>
               </div>
-            </MenubarItem>
+            </div>
+          </MenubarItem>
+          <MenubarItem>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-badge-purple-foreground rounded-md">
+                <IconWorld className="size-4 text-badge-purple" />
+              </div>
+              <div className="flex flex-col pr-2">
+                <span>Website</span>
+                <span className="text-xs text-muted-foreground">Create note from website link</span>
+              </div>
+            </div>
+          </MenubarItem>
+          <MenubarItem>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-badge-blue-foreground rounded-md">
+                <IconLetterCase className="size-4 text-badge-blue" />
+              </div>
+              <div className="flex flex-col pr-2">
+                <span>Text</span>
+                <span className="text-xs text-muted-foreground">Create note from plain text</span>
+              </div>
+            </div>
+          </MenubarItem>
+          
+          <MenubarSub>
+            <MenubarSubTrigger>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-badge-green-foreground rounded-md">
+                <IconUpload className="size-4 text-badge-green" />
+              </div>
+              <div className="flex flex-col pr-2">
+                <span>Upload</span>
+                <span className="text-xs text-muted-foreground">Create note from file</span>
+              </div>
+            </div>
 
-            <MenubarItem>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center rounded-md bg-badge-red-foreground p-2">
-                  <IconBrandYoutubeFilled className="size-4 text-badge-red" />
-                </div>
-              <div className="flex flex-col gap-0 items-start">
-                Youtube
-                <span className="text-xs text-muted-foreground">
-                  Summarize a Youtube video
-                </span>
-              </div>
-              </div>
-            </MenubarItem>
 
-            <MenubarItem>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center rounded-md bg-badge-purple-foreground p-2">
-                  <IconWorld className="size-4 text-badge-purple" />
-                </div>
-                <div className="flex flex-col gap-0 items-start">
-                  Website
-                  <span className="text-xs text-muted-foreground">
-                    Summarize a website
-                  </span>
-                </div>
-              </div>
-            </MenubarItem>
-            
-            <MenubarSub>
-              <MenubarSubTrigger>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center rounded-md bg-badge-green-foreground p-2">
-                    <IconUpload className="size-4 text-badge-green" />
-                  </div>
-                  <div className="flex flex-col gap-0 items-start">
-                    Upload
-                    <span className="text-xs text-muted-foreground">
-                      Upload a file 
-                    </span>
-                  </div>
-                </div>
-              </MenubarSubTrigger>
-              <MenubarSubContent>
-                <MenubarItem>PDF</MenubarItem>
-                <MenubarItem>MP4/MP3</MenubarItem>
-              </MenubarSubContent>
-            </MenubarSub>
-            
-          </MenubarContent>
-        </MenubarMenu>
+            </MenubarSubTrigger>
+            <MenubarSubContent>
+              <MenubarItem>
+                <IconFileUploadFilled className="size-4" />
+                Upload PDF</MenubarItem>
+              <MenubarItem>
+              <IconFileMusicFilled className="size-4" />
+                Uplaod Audio</MenubarItem>
+            </MenubarSubContent>
+          </MenubarSub>
+          
+        </MenubarContent>
+      </MenubarMenu>
       
     </Menubar>
+      
+
+      
         
         {items.map((item) => (
           <SidebarMenuItem key={item.title} >

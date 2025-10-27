@@ -48,14 +48,14 @@ const data = {
 
     {
       title: "Notes",
-      url: "#",
+      url: "/notes",
       icon: Files,
 
     },
     {
-      title: "Search Notes",
+      title: "AI Chat",
       url: "#",
-      icon: Search,
+      icon: MessageCircle,
     }
   
 
@@ -104,7 +104,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

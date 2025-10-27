@@ -8,6 +8,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
+        <SiteHeader />
         {children}
       </SidebarInset>
     </SidebarProvider>
