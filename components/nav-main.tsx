@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/menubar"
 import { useSidebar } from "@/components/ui/sidebar"
 import { useNoteSidebar } from "./note-provider"
+import { useChatSidebar } from "./chat-provider"
 
 
 
@@ -66,6 +67,7 @@ export function NavMain({
 
   const { isMobile } = useSidebar()
   const { toggle } = useNoteSidebar()
+  const { chatToggle } = useChatSidebar()
 
   return (
     <SidebarGroup>
@@ -155,7 +157,7 @@ export function NavMain({
         </SidebarMenuItem>
 
         <SidebarMenuItem>
-          <SidebarMenuButton tooltip="Ai Chat">
+          <SidebarMenuButton onClick={chatToggle} tooltip="Ai Chat">
             <IconMessageCircle className="size-4" />
             <span>Ai Chat</span>
           </SidebarMenuButton>

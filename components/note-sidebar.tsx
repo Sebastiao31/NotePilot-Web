@@ -19,14 +19,14 @@ export function NoteSidebar() {
   return (
     <div
       className={cn(
-        "fixed inset-y-0 z-80 border-r bg-background-primary transition-[transform,left] duration-300 ease-in-out left-0"
+        "fixed inset-y-0 z-80 border-r bg-background transition-[transform,left] duration-300 ease-in-out left-0"
       )}
       style={{ width, transform, pointerEvents: open ? "auto" : "none", left: leftOffset }}
       hidden={!open}
       aria-hidden={!open}
     >
       <div className="flex h-full flex-col">
-        <div className="px-5 py-4 flex items-center gap-4 justify-between">
+        <div className="p-3 px-4 flex items-center gap-4 justify-between">
 
             <span className="text-sm font-regular">Notes</span>
           
