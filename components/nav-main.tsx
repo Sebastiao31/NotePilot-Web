@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronRight, ChevronsRight, CirclePlus, Folder, MoreHorizontal, MoreVertical, Share, Trash2, type LucideIcon } from "lucide-react"
-import { IconBrandYoutubeFilled, IconCirclePlus, IconFileMusicFilled, IconFileUploadFilled, IconLetterCase, IconLetterCaseUpper, IconMicrophoneFilled, IconPlus, IconSquareRoundedPlusFilled, IconUpload, IconWorld } from "@tabler/icons-react"
+import { IconBrandYoutubeFilled, IconCirclePlus, IconFile, IconFileMusicFilled, IconFiles, IconFileUploadFilled, IconLetterCase, IconLetterCaseUpper, IconMessageCircle, IconMicrophoneFilled, IconPlus, IconSquareRoundedPlusFilled, IconUpload, IconWorld } from "@tabler/icons-react"
 import {
   Collapsible,
   CollapsibleContent,
@@ -44,6 +44,7 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar"
 import { useSidebar } from "@/components/ui/sidebar"
+import { useNoteSidebar } from "./note-provider"
 
 
 
@@ -64,12 +65,14 @@ export function NavMain({
 }) {
 
   const { isMobile } = useSidebar()
+  const { toggle } = useNoteSidebar()
+
   return (
     <SidebarGroup>
       <SidebarMenu>
       <Menubar>
       <MenubarMenu>
-        <MenubarTrigger className="w-full gap-2">
+        <MenubarTrigger className="w-full gap-2" >
           <span>
             <IconCirclePlus className="size-4" />
           </span>
@@ -144,17 +147,19 @@ export function NavMain({
 
       
         
-        {items.map((item) => (
-          <SidebarMenuItem key={item.title} >
-            <SidebarMenuButton asChild tooltip={item.title} size="md">
-              <a href={item.url}>
-                <item.icon />
-                <span>{item.title}</span>
-              </a>
-            </SidebarMenuButton>
-            
-          </SidebarMenuItem>
-        ))}
+        <SidebarMenuItem>
+          <SidebarMenuButton onClick={toggle} tooltip="Notes">
+            <IconFiles className="size-4" />
+            <span>Notes</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <SidebarMenuButton tooltip="Ai Chat">
+            <IconMessageCircle className="size-4" />
+            <span>Ai Chat</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
         
       </SidebarMenu>
     </SidebarGroup>
