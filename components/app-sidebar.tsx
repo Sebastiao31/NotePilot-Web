@@ -33,6 +33,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { SignedIn, UserButton } from "@clerk/nextjs"
 import Image from "next/image"
@@ -84,20 +85,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
+          <div className="flex items-center justify-between">
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="w-fit">
-              <a href="#">
+              <a href="#" className="group-data-[state=collapsed]:hidden">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Image src="/Logo-light.svg" alt="logo" width={24} height={24} />
                 </div>
+
+                
                 
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarTrigger />
+          </div>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavSecondary />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

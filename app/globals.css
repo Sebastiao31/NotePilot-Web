@@ -42,6 +42,16 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-badge-red: var(--badge-red);
+  --color-badge-red-foreground: var(--badge-red-foreground);
+  --color-badge-blue: var(--badge-blue);
+  --color-badge-blue-foreground: var(--badge-blue-foreground);
+  --color-badge-purple: var(--badge-purple);
+  --color-badge-purple-foreground: var(--badge-purple-foreground);
+  --color-badge-green: var(--badge-green);
+  --color-badge-green-foreground: var(--badge-green-foreground);
+  --color-action: var(--action);
+  --color-action-accent: var(--action-accent);
 }
 
 :root {
@@ -77,10 +87,21 @@
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --action: hsl(220, 82%, 55%);
+  --action-accent: hsl(220, 82%, 45%);
+  /* badge colors */
+  --badge-red: hsl(5, 54%, 58%);
+  --badge-red-foreground: hsl(4, 79%, 96%);
+  --badge-blue: hsl(205, 85%, 49%);
+  --badge-blue-foreground: hsl(209, 78%, 95%);
+  --badge-purple: hsl(255, 71%, 56%);
+  --badge-purple-foreground: hsl(254, 100%, 96%);
+  --badge-green: hsl(136, 45%, 49%);
+  --badge-green-foreground: hsl(134, 71%, 93%);
 }
 
 .dark {
-  --background: hsl(240, 4%, 9%);
+  --background: hsl(240, 4%, 11%);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -111,6 +132,17 @@
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --action: hsl(220, 82%, 55%);
+  --action-accent: hsl(220, 82%, 45%);
+  /* badge colors */
+  --badge-red: hsl(5, 57%, 63%);
+  --badge-red-foreground: hsl(10, 23%, 15%);
+  --badge-blue: hsl(208, 100%, 59%);
+  --badge-blue-foreground: hsl(209, 44%, 14%);
+  --badge-purple: hsl(256, 84%, 69%);
+  --badge-purple-foreground: hsl(255, 31%, 15%);
+  --badge-green: hsl(135, 58%, 49%);
+  --badge-green-foreground: hsl(134, 18%, 14%);
 }
 
 @layer base {
