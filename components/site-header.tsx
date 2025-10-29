@@ -13,7 +13,7 @@ export function SiteHeader() {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4 md:hidden"
             />
-            <span className="text-sm font-medium">Note name</span>
+            <span className="text-sm font-medium">Notes</span>
           </div>
         </header>
         

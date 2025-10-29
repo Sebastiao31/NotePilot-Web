@@ -6,6 +6,7 @@ import { useNoteSidebar } from "./note-provider"
 import { useSidebar } from "@/components/ui/sidebar"
 import { IconDotsVertical, IconFolder, IconChevronsLeft } from "@tabler/icons-react"
 import { Button } from "./ui/button"
+import { SearchNotes } from "./search-notes"
 
 
 export function NoteSidebar() {
@@ -19,7 +20,7 @@ export function NoteSidebar() {
   return (
     <div
       className={cn(
-        "fixed inset-y-0 z-80 border-r bg-background transition-[transform,left] duration-300 ease-in-out left-0"
+        "fixed inset-y-0 z-40 border-r bg-background transition-[transform,left] duration-300 ease-in-out left-0"
       )}
       style={{ width, transform, pointerEvents: open ? "auto" : "none", left: leftOffset }}
       hidden={!open}
@@ -36,6 +37,7 @@ export function NoteSidebar() {
         </div>
 
         <div className="px-4">
+          <SearchNotes />
         </div>
         <div className="flex-1 overflow-y-auto p-3 ">
           

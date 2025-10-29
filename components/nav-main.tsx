@@ -46,7 +46,18 @@ import {
 import { useSidebar } from "@/components/ui/sidebar"
 import { useNoteSidebar } from "./note-provider"
 import { useChatSidebar } from "./chat-provider"
-
+import { YoutubeDialog } from "./dialogs/youtube"
+import { WebsiteDialog } from "./dialogs/website"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 
 
@@ -84,26 +95,10 @@ export function NavMain({
           </MenubarTrigger>
         <MenubarContent>
           <MenubarItem>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-badge-red-foreground rounded-md">
-                <IconBrandYoutubeFilled className="size-4 text-badge-red" />
-              </div>
-              <div className="flex flex-col pr-2">
-                <span>Youtube</span>
-                <span className="text-xs text-muted-foreground">Create note from youtube video</span>
-              </div>
-            </div>
+            <YoutubeDialog />
           </MenubarItem>
           <MenubarItem>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-badge-purple-foreground rounded-md">
-                <IconWorld className="size-4 text-badge-purple" />
-              </div>
-              <div className="flex flex-col pr-2">
-                <span>Website</span>
-                <span className="text-xs text-muted-foreground">Create note from website link</span>
-              </div>
-            </div>
+            <WebsiteDialog />
           </MenubarItem>
           <MenubarItem>
             <div className="flex items-center gap-3">
