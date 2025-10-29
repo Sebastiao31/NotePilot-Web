@@ -48,6 +48,7 @@ import { useNoteSidebar } from "./note-provider"
 import { useChatSidebar } from "./chat-provider"
 import { YoutubeDialog } from "./dialogs/youtube"
 import { WebsiteDialog } from "./dialogs/website"
+import { TextDialog } from "./dialogs/text"
 import {
   Dialog,
   DialogClose,
@@ -101,15 +102,7 @@ export function NavMain({
             <WebsiteDialog />
           </MenubarItem>
           <MenubarItem>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-badge-blue-foreground rounded-md">
-                <IconLetterCase className="size-4 text-badge-blue" />
-              </div>
-              <div className="flex flex-col pr-2">
-                <span>Text</span>
-                <span className="text-xs text-muted-foreground">Create note from plain text</span>
-              </div>
-            </div>
+            <TextDialog />
           </MenubarItem>
           
           <MenubarSub>
