@@ -1,8 +1,11 @@
 import React from 'react'
+import Editor from '@/components/richTextEditor/editor'
 
 const NoteIdPage = () => {
   return (
-    <div>NoteIdPage</div>
+    <div className="max-w-3xl mx-auto h-full py-8">
+      <Editor />
+    </div>
   )
 }
 
