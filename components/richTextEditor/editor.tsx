@@ -1,7 +1,7 @@
 'use client'
 
 import { Toggle } from '@/components/ui/toggle'
-import { IconBold, IconCode, IconItalic, IconLetterT, IconStrikethrough, IconUnderline } from '@tabler/icons-react'
+import { IconBan, IconBold, IconCircle, IconCircleFilled, IconCode, IconItalic, IconLetterT, IconStrikethrough, IconUnderline } from '@tabler/icons-react'
 import { EditorContent, useEditor } from '@tiptap/react'
 import { BubbleMenu, FloatingMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
@@ -11,15 +11,22 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Heading1, Heading2, Heading3 } from 'lucide-react'
+import { ChevronDown, ChevronsDownIcon, ChevronsUpDownIcon, Heading1, Heading2, Heading3 } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Separator } from '../ui/separator'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from '../ui/button'
+import Highlight from '@tiptap/extension-highlight'
 
 export default () => {
   const [updateCounter, setUpdateCounter] = useState(0)
   
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Highlight.configure({ multicolor: true })],
     immediatelyRender: false,
     content: `
       <p>
@@ -128,6 +135,51 @@ export default () => {
         </Select>
 
         <Separator orientation="vertical" className="h-4 data-[orientation=vertical]:h-4" />
+
+        <Popover>
+          <PopoverTrigger className="flex items-center gap-2 h-8 px-2 rounded-md hover:bg-accent hover:cursor-pointer">
+            <IconCircleFilled className="size-4" />
+            <ChevronDown className="size-4" />
+          </PopoverTrigger>
+          <PopoverContent className="w-fit mt-3 p-1 flex flex-row gap-1 items-center">
+            <Button variant="ghost" size="icon-sm"
+            onClick={() => editor.chain().focus().toggleHighlight({ color: 'var(--color-highlight-yellow)' }).run()}
+            className={editor.isActive('highlight', { color: 'var(--color-highlight-yellow)' }) ? 'is-active' : ''}
+            >
+              <IconCircleFilled className="size-4 text-highlight-yellow" />
+            </Button>
+            <Button variant="ghost" size="icon-sm"
+            onClick={() => editor.chain().focus().toggleHighlight({ color: 'var(--color-highlight-red)' }).run()}
+            className={editor.isActive('highlight', { color: 'var(--color-highlight-red)' }) ? 'is-active' : ''}
+            >
+              <IconCircleFilled className="size-4 text-highlight-red" />
+            </Button>
+            <Button variant="ghost" size="icon-sm"
+            onClick={() => editor.chain().focus().toggleHighlight({ color: 'var(--color-highlight-blue)' }).run()}
+            className={editor.isActive('highlight', { color: 'var(--color-highlight-blue)' }) ? 'is-active' : ''}
+            >
+              <IconCircleFilled className="size-4 text-highlight-blue" />
+            </Button>
+            <Button variant="ghost" size="icon-sm"
+            onClick={() => editor.chain().focus().toggleHighlight({ color: 'var(--color-highlight-purple)' }).run()}
+            className={editor.isActive('highlight', { color: 'var(--color-highlight-purple)' }) ? 'is-active' : ''}
+            >
+              <IconCircleFilled className="size-4 text-highlight-purple" />
+            </Button>
+            <Button variant="ghost" size="icon-sm"
+            onClick={() => editor.chain().focus().toggleHighlight({ color: 'var(--color-highlight-green)' }).run()}
+            className={editor.isActive('highlight', { color: 'var(--color-highlight-green)' }) ? 'is-active' : ''}
+            >
+              <IconCircleFilled className="size-4 text-highlight-green" />
+            </Button>
+            <Button variant="ghost" size="icon-sm"
+            onClick={() => editor.chain().focus().toggleHighlight({ color: 'var(--color-background)' }).run()}
+            className={editor.isActive('highlight', { color: 'var(--color-background)' }) ? 'is-active' : ''}
+            >
+              <IconBan className="size-4 text-foreground" />
+            </Button>
+          </PopoverContent>
+        </Popover>
         
         
         {Options.map((option, index) => (

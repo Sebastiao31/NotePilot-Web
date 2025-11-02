@@ -69,7 +69,7 @@ export function TextDialog( ) {
           
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="ghost">Cancel</Button>
+              <Button variant="ghost" className="rounded-full">Cancel</Button>
             </DialogClose>
             <Button type="submit" disabled={!text}>Create note</Button>
           </DialogFooter>

@@ -71,7 +71,7 @@ export function YoutubeDialog( ) {
             </DialogDescription>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="ghost">Cancel</Button>
+              <Button variant="ghost" className="rounded-full">Cancel</Button>
             </DialogClose>
             <Button type="submit" disabled={!youtubeUrl}>Create note</Button>
           </DialogFooter>

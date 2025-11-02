@@ -71,7 +71,7 @@ export function WebsiteDialog( ) {
             </DialogDescription>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="ghost">Cancel</Button>
+              <Button variant="ghost" className="rounded-full">Cancel</Button>
             </DialogClose>
             <Button type="submit" disabled={!websiteUrl}>Create note</Button>
           </DialogFooter>

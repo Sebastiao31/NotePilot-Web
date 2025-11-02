@@ -52,6 +52,11 @@
   --color-badge-green-foreground: var(--badge-green-foreground);
   --color-action: var(--action);
   --color-action-accent: var(--action-accent);
+  --color-highlight-yellow: var(--highlight-yellow);
+  --color-highlight-red: var(--highlight-red);
+  --color-highlight-blue: var(--highlight-blue);
+  --color-highlight-purple: var(--highlight-purple);
+  --color-highlight-green: var(--highlight-green);
 }
 
 :root {
@@ -98,6 +103,12 @@
   --badge-purple-foreground: hsl(254, 100%, 96%);
   --badge-green: hsl(136, 45%, 49%);
   --badge-green-foreground: hsl(134, 71%, 93%);
+  /*Highlight colors*/
+  --highlight-yellow: hsl(47, 96%, 80%);
+  --highlight-red: hsl(10, 89%, 82%);
+  --highlight-blue: hsl(207, 83%, 80%);
+  --highlight-purple: hsl(255, 85%, 84%);
+  --highlight-green: hsl(151, 67%, 82%);
 }
 
 .dark {
@@ -143,6 +154,12 @@
   --badge-purple-foreground: hsl(255, 31%, 15%);
   --badge-green: hsl(135, 58%, 49%);
   --badge-green-foreground: hsl(134, 18%, 14%);
+  /*Highlight colors*/
+  --highlight-yellow: hsl(46, 56%, 22%);
+  --highlight-red: hsl(9, 59%, 29%);
+  --highlight-blue: hsl(206, 55%, 30%);
+  --highlight-purple: hsl(255, 42%, 31%);
+  --highlight-green: hsl(148, 36%, 23%);
 }
 
 @layer base {
@@ -244,6 +261,10 @@
     border: none;
     border-top: 1px solid var(--gray-2);
     margin: 2rem 0;
+  }
+  mark {
+    border-radius: 0.2rem;
+    box-decoration-break: clone;
   }
 
  
