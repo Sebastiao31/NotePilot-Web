@@ -5,7 +5,7 @@ import { IconBan, IconBold, IconCircle, IconCircleFilled, IconCode, IconItalic, 
 import { EditorContent, useEditor } from '@tiptap/react'
 import { BubbleMenu, FloatingMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Tooltip,
   TooltipContent,
@@ -21,12 +21,18 @@ import {
 } from "@/components/ui/popover"
 import { Button } from '../ui/button'
 import Highlight from '@tiptap/extension-highlight'
+import { useEditorBridge } from './editor-context'
+import { TableKit } from '@tiptap/extension-table'
 
 export default () => {
   const [updateCounter, setUpdateCounter] = useState(0)
+  const { setEditor } = useEditorBridge()
   
   const editor = useEditor({
-    extensions: [StarterKit, Highlight.configure({ multicolor: true })],
+    extensions: [StarterKit, 
+      Highlight.configure({ multicolor: true }), 
+      TableKit.configure({  table: { resizable: true },}),
+    ],
     immediatelyRender: false,
     content: `
       <p>
@@ -43,6 +49,10 @@ export default () => {
       setUpdateCounter(prev => prev + 1)
     },
   })
+  useEffect(() => {
+    setEditor(editor ?? null)
+    return () => setEditor(null)
+  }, [editor, setEditor])
 
   const headingOptions = [
     {task: 'p', value: 'Text', icon: <IconLetterT className="size-3" />},

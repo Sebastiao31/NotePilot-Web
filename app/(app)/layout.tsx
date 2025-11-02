@@ -8,25 +8,28 @@ import { NoteSidebar } from '@/components/note-sidebar'
 import { ChatProvider } from '@/components/chat-provider'
 import { ChatInset } from '@/components/chat-inset'
 import { ChatSidebar } from '@/components/chat-sidebar'
+import { EditModeProvider } from '@/components/edit-mode-provider'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
-      <ChatProvider>
-      <NoteProvider>
-        <AppSidebar />
-        <SidebarInset>
-        <NoteInset>
-        <ChatInset>
-          <SiteHeader />
-          {children}
-        </ChatInset>
-        </NoteInset>
-        </SidebarInset>
-        <NoteSidebar />
-        <ChatSidebar />
-      </NoteProvider>
-      </ChatProvider>
+      <EditModeProvider>
+        <ChatProvider>
+        <NoteProvider>
+          <AppSidebar />
+          <SidebarInset>
+          <NoteInset>
+          <ChatInset>
+            <SiteHeader />
+            {children}
+          </ChatInset>
+          </NoteInset>
+          </SidebarInset>
+          <NoteSidebar />
+          <ChatSidebar />
+        </NoteProvider>
+        </ChatProvider>
+      </EditModeProvider>
     </SidebarProvider>
   )
 }

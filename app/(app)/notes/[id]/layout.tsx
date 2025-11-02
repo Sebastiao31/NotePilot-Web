@@ -1,8 +1,15 @@
 import React from 'react'
+import { FloatingBar } from '@/components/floating-bar'
+import { EditorBridgeProvider } from '@/components/richTextEditor/editor-context'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="h-full">{children}</div>
+    <EditorBridgeProvider>
+      <div className="h-full ">
+        {children}
+        <FloatingBar />
+      </div>
+    </EditorBridgeProvider>
   )
 }
 
