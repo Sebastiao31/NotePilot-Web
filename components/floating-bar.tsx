@@ -61,6 +61,34 @@ export function FloatingBar() {
     },
   })
 
+  const currentBlockLevel = editorState?.isHeading1
+    ? 'h1'
+    : editorState?.isHeading2
+    ? 'h2'
+    : editorState?.isHeading3
+    ? 'h3'
+    : 'p'
+
+  const handleHeadingChange = (value: string) => {
+    if (!editor) return
+    switch (value) {
+      case 'p':
+        editor.chain().focus().setParagraph().run()
+        break
+      case 'h1':
+        editor.chain().focus().setHeading({ level: 1 }).run()
+        break
+      case 'h2':
+        editor.chain().focus().setHeading({ level: 2 }).run()
+        break
+      case 'h3':
+        editor.chain().focus().setHeading({ level: 3 }).run()
+        break
+      default:
+        break
+    }
+  }
+
   return (
     <div
       className="fixed bottom-0 mb-4 mx-4 z-40 border w-fit p-1 rounded-lg"
@@ -69,15 +97,16 @@ export function FloatingBar() {
       <div className="flex items-center gap-2">
       
 
-        <Select>
-            <SelectTrigger>
-                <SelectValue placeholder="Select a note" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="1">Note 1</SelectItem>
-                <SelectItem value="2">Note 2</SelectItem>
-                <SelectItem value="3">Note 3</SelectItem>
-            </SelectContent>
+        <Select value={currentBlockLevel} onValueChange={handleHeadingChange} disabled={!editor}>
+          <SelectTrigger className="border-none shadow-none hover:bg-accent hover:cursor-pointer">
+            <SelectValue placeholder="Text" />
+          </SelectTrigger>
+          <SelectContent className="mb-2">
+            <SelectItem value="p">Text</SelectItem>
+            <SelectItem value="h1">Heading 1</SelectItem>
+            <SelectItem value="h2">Heading 2</SelectItem>
+            <SelectItem value="h3">Heading 3</SelectItem>
+          </SelectContent>
         </Select>
 
         <Separator orientation="vertical" className="h-4 data-[orientation=vertical]:h-4" />
