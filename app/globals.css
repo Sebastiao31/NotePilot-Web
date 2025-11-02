@@ -178,17 +178,31 @@
     margin-top: 0;
   }
 
-  /* List styles */
-  ul,
-  ol {
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
+    /* List styles */
+    ul{
+      list-style-type: disc;
+      padding: 0 1rem;
+      margin: 1.25rem 1rem 1.25rem 0.4rem;
 
-    li p {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
+        
+      li p {
+        margin-top: 0.25em;
+        margin-bottom: 0.25em;
+      }
+
     }
-  }
+
+    ol {
+      padding: 0 1rem;
+      margin: 1.25rem 1rem 1.25rem 0.4rem;
+      list-style-type: decimal;
+    
+  
+      li p {
+        margin-top: 0.25em;
+        margin-bottom: 0.25em;
+      }
+    }
 
   /* Heading styles */
   h1,
@@ -252,7 +266,7 @@
   }
 
   blockquote {
-    border-left: 3px solid var(--gray-3);
+    border-left: 4px solid var(--border);
     margin: 1.5rem 0;
     padding-left: 1rem;
   }

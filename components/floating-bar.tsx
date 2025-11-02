@@ -8,11 +8,11 @@ import { useSidebar } from "@/components/ui/sidebar"
 import { useEditMode } from "@/components/edit-mode-provider"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { IconArrowBackUp, IconArrowForwardUp, IconMathFunctionY, IconSquareRoot2, IconTable, IconBold } from "@tabler/icons-react"
+import { IconArrowBackUp, IconArrowForwardUp, IconMathFunctionY, IconSquareRoot2, IconTable, IconBold, IconQuote, IconList } from "@tabler/icons-react"
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip"
-import { SquareCode, SquareSigma } from "lucide-react"
+import { ListOrdered, SquareCode, SquareSigma } from "lucide-react"
 import { useEditorBridge } from "@/components/richTextEditor/editor-context"
-
+import { useEditorState } from "@tiptap/react"
 // Constants mirrored from ui/sidebar.tsx for layout math
 const APP_SIDEBAR_WIDTH_EXPANDED = 14 * 16 // 14rem
 const APP_SIDEBAR_WIDTH_ICON = 3 * 16 // 3rem
@@ -31,22 +31,43 @@ export function FloatingBar() {
     : (state === "expanded" ? APP_SIDEBAR_WIDTH_EXPANDED : APP_SIDEBAR_WIDTH_ICON) + (noteOpen ? noteWidth : 0)
   const rightOffset = isMobile ? 0 : (chatOpen ? chatWidth : 0)
 
+  const editorState = useEditorState({
+    editor,
+    selector: ctx => {
+      return {
+        isBold: ctx.editor?.isActive('bold') ?? false,
+        canBold: ctx.editor?.can().chain().toggleBold().run() ?? false,
+        isItalic: ctx.editor?.isActive('italic') ?? false,
+        canItalic: ctx.editor?.can().chain().toggleItalic().run() ?? false,
+        isStrike: ctx.editor?.isActive('strike') ?? false,
+        canStrike: ctx.editor?.can().chain().toggleStrike().run() ?? false,
+        isCode: ctx.editor?.isActive('code') ?? false,
+        canCode: ctx.editor?.can().chain().toggleCode().run() ?? false,
+        canClearMarks: ctx.editor?.can().chain().unsetAllMarks().run() ?? false,
+        isParagraph: ctx.editor?.isActive('paragraph') ?? false,
+        isHeading1: ctx.editor?.isActive('heading', { level: 1 }) ?? false,
+        isHeading2: ctx.editor?.isActive('heading', { level: 2 }) ?? false,
+        isHeading3: ctx.editor?.isActive('heading', { level: 3 }) ?? false,
+        isHeading4: ctx.editor?.isActive('heading', { level: 4 }) ?? false,
+        isHeading5: ctx.editor?.isActive('heading', { level: 5 }) ?? false,
+        isHeading6: ctx.editor?.isActive('heading', { level: 6 }) ?? false,
+        isBulletList: ctx.editor?.isActive('bulletList') ?? false,
+        isOrderedList: ctx.editor?.isActive('orderedList') ?? false,
+        isCodeBlock: ctx.editor?.isActive('codeBlock') ?? false,
+        isBlockquote: ctx.editor?.isActive('blockquote') ?? false,
+        canUndo: ctx.editor?.can().chain().undo().run() ?? false,
+        canRedo: ctx.editor?.can().chain().redo().run() ?? false,
+      }
+    },
+  })
+
   return (
     <div
       className="fixed bottom-0 mb-4 mx-4 z-40 border w-fit p-1 rounded-lg"
       style={{ left: leftOffset, right: rightOffset }}
     >
       <div className="flex items-center gap-2">
-         <Tooltip>
-             <TooltipTrigger asChild>
-                 <Button variant="ghost" size="icon" disabled={!editor} onClick={() => editor?.chain().focus().toggleBold().run()}>
-                     <IconBold />
-                 </Button>
-             </TooltipTrigger>
-             <TooltipContent>
-                 <p>Bold</p>
-             </TooltipContent>
-         </Tooltip>
+      
 
         <Select>
             <SelectTrigger>
@@ -64,6 +85,28 @@ export function FloatingBar() {
         <div>
         <Tooltip>
             <TooltipTrigger>
+                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleBulletList().run()}>
+                    <IconList />
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+                <p>Insert List</p>
+            </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+            <TooltipTrigger>
+                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleOrderedList().run()}>
+                    <ListOrdered />
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+                <p>Insert Ordered List</p>
+            </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+            <TooltipTrigger>
                 <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>
                     <IconTable />
                 </Button>
@@ -75,12 +118,12 @@ export function FloatingBar() {
 
         <Tooltip>
             <TooltipTrigger>
-                <Button variant="ghost" size="icon">
-                    <SquareCode />
+                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleBlockquote().run()}>
+                    <IconQuote />
                 </Button>
             </TooltipTrigger>
             <TooltipContent>
-                <p>Insert Code Block</p>
+                <p>Insert Blockquote</p>
             </TooltipContent>
         </Tooltip>
 
@@ -112,7 +155,7 @@ export function FloatingBar() {
         <div>
         <Tooltip>
             <TooltipTrigger>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().undo().run()} disabled={!editorState?.canUndo}>
                     <IconArrowBackUp />
                 </Button>
             </TooltipTrigger>
@@ -123,7 +166,7 @@ export function FloatingBar() {
 
         <Tooltip>
             <TooltipTrigger>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().redo().run()} disabled={!editorState?.canRedo}>
                     <IconArrowForwardUp />
                 </Button>
             </TooltipTrigger>

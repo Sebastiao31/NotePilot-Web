@@ -2,7 +2,7 @@
 
 import { Toggle } from '@/components/ui/toggle'
 import { IconBan, IconBold, IconCircle, IconCircleFilled, IconCode, IconItalic, IconLetterT, IconStrikethrough, IconUnderline } from '@tabler/icons-react'
-import { EditorContent, useEditor } from '@tiptap/react'
+import { EditorContent, ReactNodeViewRenderer, useEditor } from '@tiptap/react'
 import { BubbleMenu, FloatingMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
 import React, { useEffect, useState } from 'react'
@@ -24,14 +24,19 @@ import Highlight from '@tiptap/extension-highlight'
 import { useEditorBridge } from './editor-context'
 import { TableKit } from '@tiptap/extension-table'
 
+
 export default () => {
   const [updateCounter, setUpdateCounter] = useState(0)
   const { setEditor } = useEditorBridge()
+
+  
   
   const editor = useEditor({
-    extensions: [StarterKit, 
-      Highlight.configure({ multicolor: true }), 
-      TableKit.configure({  table: { resizable: true },}),
+    extensions: [
+      StarterKit,
+      Highlight.configure({ multicolor: true }),
+      TableKit.configure({ table: { resizable: true } }),
+      
     ],
     immediatelyRender: false,
     content: `
@@ -49,6 +54,7 @@ export default () => {
       setUpdateCounter(prev => prev + 1)
     },
   })
+  
   useEffect(() => {
     setEditor(editor ?? null)
     return () => setEditor(null)
