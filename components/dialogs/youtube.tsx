@@ -33,24 +33,13 @@ import { IconBrandYoutubeFilled } from '@tabler/icons-react'
 import { useState } from 'react'
 
 
-export function YoutubeDialog( ) {
+export function YoutubeDialog({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const [youtubeUrl, setYoutubeUrl] = useState("")
+  const controlledProps = open === undefined ? {} : { open, onOpenChange }
   return (
 
-        <Dialog>
-        <DialogTrigger asChild >
-            
-            <div className="flex items-center gap-3">
-                <div className="p-2 bg-badge-red-foreground rounded-md">
-                <IconBrandYoutubeFilled className="size-4 text-badge-red" />
-                </div>
-                <div className="flex flex-col pr-2">
-                <span>Youtube</span>
-                <span className="text-xs text-muted-foreground">Create note from youtube video</span>
-                </div>
-            </div>
-
-        </DialogTrigger>
+        <Dialog {...controlledProps}>
+        
         <DialogContent >
         <DialogHeader>
             <DialogTitle>Youtube video</DialogTitle>

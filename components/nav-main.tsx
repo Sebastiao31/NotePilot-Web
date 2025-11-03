@@ -59,6 +59,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { CreateNoteMenu } from "./create-note-menu"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from "./ui/button"
 
 
 
@@ -84,55 +91,9 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarMenu>
-      <Menubar>
-      <MenubarMenu>
-        <MenubarTrigger className="w-full gap-2" >
-          <span>
-            <IconCirclePlus className="size-4" />
-          </span>
-          <span className="group-data-[state=collapsed]:hidden">
-            Create Note
-          </span>
-          </MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>
-            <YoutubeDialog />
-          </MenubarItem>
-          <MenubarItem>
-            <WebsiteDialog />
-          </MenubarItem>
-          <MenubarItem>
-            <TextDialog />
-          </MenubarItem>
-          
-          <MenubarSub>
-            <MenubarSubTrigger>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-badge-green-foreground rounded-md">
-                <IconUpload className="size-4 text-badge-green" />
-              </div>
-              <div className="flex flex-col pr-2">
-                <span>Upload</span>
-                <span className="text-xs text-muted-foreground">Create note from file</span>
-              </div>
-            </div>
+      <CreateNoteMenu />
 
-
-            </MenubarSubTrigger>
-            <MenubarSubContent>
-              <MenubarItem>
-                <IconFileUploadFilled className="size-4" />
-                Upload PDF</MenubarItem>
-              <MenubarItem>
-              <IconFileMusicFilled className="size-4" />
-                Uplaod Audio</MenubarItem>
-            </MenubarSubContent>
-          </MenubarSub>
-          
-        </MenubarContent>
-      </MenubarMenu>
       
-    </Menubar>
       
 
       

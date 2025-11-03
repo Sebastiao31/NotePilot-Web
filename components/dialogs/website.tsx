@@ -36,9 +36,12 @@ import { toast } from 'sonner'
 import { emitNotesInsert, emitNotesUpdate } from '@/lib/events'
 
 
-export function WebsiteDialog( ) {
+export function WebsiteDialog({ open: controlledOpen, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const [websiteUrl, setWebsiteUrl] = useState("")
-  const [open, setOpen] = useState(false)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
+  const isControlled = controlledOpen !== undefined && typeof onOpenChange === 'function'
+  const open = isControlled ? controlledOpen! : uncontrolledOpen
+  const setOpen = isControlled ? onOpenChange! : setUncontrolledOpen
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
@@ -59,7 +62,7 @@ export function WebsiteDialog( ) {
     if (!websiteUrl) return
     setSubmitting(true)
     try {
-      toast("Fetching website and generating note...")
+      toast("Generating note...")
       setOpen(false)
       const res = await fetch("/api/notes/create-website", {
         method: "POST",
@@ -68,7 +71,7 @@ export function WebsiteDialog( ) {
       })
       if (!res.ok) {
         const msg = await res.text()
-        throw new Error(msg || "Failed to create website note")
+        throw new Error(msg || "Failed to create note")
       }
       const { id, title } = await res.json()
       const now = new Date().toISOString()
@@ -76,7 +79,7 @@ export function WebsiteDialog( ) {
       const summaryResult = await summarize(id)
       const resolvedTitle = (summaryResult && summaryResult.title) ? String(summaryResult.title) : (title || websiteUrl)
       emitNotesUpdate({ id, title: resolvedTitle, status: 'completed', updated_at: new Date().toISOString() })
-      toast.success("Website note created successfully")
+      toast.success("Note created successfully")
       router.push(`/notes/${id}`)
     } catch (err) {
       console.error(err)
@@ -88,19 +91,7 @@ export function WebsiteDialog( ) {
   return (
 
         <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild >
-            
-            <div className="flex items-center gap-3">
-                <div className="p-2 bg-badge-purple-foreground rounded-md">
-                <IconWorld className="size-4 text-badge-purple" />
-                </div>
-                <div className="flex flex-col pr-2">
-                <span>Website</span>
-                <span className="text-xs text-muted-foreground">Create note from website link</span>
-                </div>
-            </div>
-
-        </DialogTrigger>
+        
         <DialogContent >
         <DialogHeader>
             <DialogTitle>Website</DialogTitle>

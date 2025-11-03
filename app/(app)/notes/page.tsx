@@ -29,6 +29,7 @@ import { IconCirclePlus, IconBrandYoutubeFilled, IconWorld, IconLetterCase, Icon
 import { YoutubeDialog } from "@/components/dialogs/youtube"
 import { WebsiteDialog } from "@/components/dialogs/website"
 import { TextDialog } from "@/components/dialogs/text"
+import { Input } from "@/components/ui/input"
 
 
 
@@ -85,7 +86,7 @@ export default function NotesPage() {
                 Upload PDF</MenubarItem>
               <MenubarItem>
               <IconFileMusicFilled className="size-4" />
-                Uplaod Audio</MenubarItem>
+                Upload Audio</MenubarItem>
             </MenubarSubContent>
           </MenubarSub>
           
@@ -93,6 +94,7 @@ export default function NotesPage() {
       </MenubarMenu>
       
     </Menubar>
+
       
       
 

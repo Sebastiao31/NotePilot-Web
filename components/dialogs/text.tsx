@@ -37,11 +37,14 @@ import { toast } from 'sonner'
 import { emitNotesInsert, emitNotesUpdate } from '@/lib/events'
 
 
-export function TextDialog( ) {
+export function TextDialog({ open: controlledOpen, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const [text, setText] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
-  const [open, setOpen] = useState(false)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
+  const isControlled = controlledOpen !== undefined && typeof onOpenChange === 'function'
+  const open = isControlled ? controlledOpen! : uncontrolledOpen
+  const setOpen = isControlled ? onOpenChange! : setUncontrolledOpen
   
   async function summarize(noteId: string) {
     const res = await fetch("/api/summarize", {
@@ -93,19 +96,7 @@ export function TextDialog( ) {
   return (
 
         <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild >
-            
-            <div className="flex items-center gap-3">
-                <div className="p-2 bg-badge-blue-foreground rounded-md">
-                <IconLetterCase className="size-4 text-badge-blue" />
-                </div>
-                <div className="flex flex-col pr-2">
-                <span>Text</span>
-                <span className="text-xs text-muted-foreground">Create note from plain text</span>
-                </div>
-            </div>
-
-        </DialogTrigger>
+        
         <DialogContent >
         <DialogHeader>
             <DialogTitle>Text</DialogTitle>
