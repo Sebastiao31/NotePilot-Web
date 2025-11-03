@@ -29,10 +29,14 @@ import 'katex/dist/katex.min.css'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 
-export default function Editor({ initialContent = "" }: { initialContent?: string }) {
+export default function Editor({ noteId, initialContent = "" }: { noteId: string; initialContent?: string }) {
   const [updateCounter, setUpdateCounter] = useState(0)
   const { setEditor } = useEditorBridge()
   const { editMode } = useEditMode()
+  const [lastSavedHtml, setLastSavedHtml] = useState<string>(initialContent || "")
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [debounceTimer, setDebounceTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
 
   
   
@@ -71,6 +75,42 @@ export default function Editor({ initialContent = "" }: { initialContent?: strin
     setEditor(editor ?? null)
     return () => setEditor(null)
   }, [editor, setEditor])
+
+  // Autosave (debounced) while in edit mode
+  useEffect(() => {
+    if (!editor || !editMode) return
+
+    // clear previous timer
+    if (debounceTimer) clearTimeout(debounceTimer)
+
+    const timer = setTimeout(async () => {
+      try {
+        const html = editor.getHTML()
+        if (html === lastSavedHtml) return
+        setIsSaving(true)
+        setSaveError(null)
+        const res = await fetch('/api/notes/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: noteId, summary: html }),
+        })
+        if (!res.ok) {
+          const msg = await res.text()
+          throw new Error(msg || 'Failed to save note')
+        }
+        setLastSavedHtml(html)
+      } catch (e: any) {
+        setSaveError(e?.message || 'Save failed')
+      } finally {
+        setIsSaving(false)
+      }
+    }, 100)
+    setDebounceTimer(timer)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [editor, editMode, updateCounter, noteId, lastSavedHtml])
 
   const headingOptions = [
     {task: 'p', value: 'Text', icon: <IconLetterT className="size-3" />},
