@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       title,
       type: "text",
       url: "",
-      status: "completed",
+      status: "generating",
       transcript: text,
       summary: "",
     };

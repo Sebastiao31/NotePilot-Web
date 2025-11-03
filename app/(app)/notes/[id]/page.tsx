@@ -1,15 +1,19 @@
-import React from 'react'
+import { createSupabaseClient } from '@/lib/supabase-server'
 import Editor from '@/components/richTextEditor/editor'
 
+export default async function NoteIdPage({ params }: { params: { id: string } }) {
+  const supabase = await createSupabaseClient()
+  const { data: note } = await supabase
+    .from('notes')
+    .select('id, summary, transcript')
+    .eq('id', params.id)
+    .single()
 
-const NoteIdPage = () => {
+  const initialContent = note?.summary || ''
+
   return (
-
     <div className="max-w-3xl mx-auto h-full pt-12 pb-36">
-        <Editor />
+      <Editor initialContent={initialContent} />
     </div>
-
   )
 }
-
-export default NoteIdPage

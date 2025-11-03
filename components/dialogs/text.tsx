@@ -31,17 +31,37 @@ import {
   } from "@/components/ui/menubar"
 import { IconBrandYoutubeFilled, IconLetterCase, IconWorld } from '@tabler/icons-react'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Textarea } from '../ui/textarea'
+import { toast } from 'sonner'
+import { emitNotesInsert, emitNotesUpdate } from '@/lib/events'
 
 
 export function TextDialog( ) {
   const [text, setText] = useState("")
   const [submitting, setSubmitting] = useState(false)
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  
+  async function summarize(noteId: string) {
+    const res = await fetch("/api/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ noteId }),
+    })
+    if (!res.ok) {
+      const msg = await res.text()
+      throw new Error(msg || "Failed to summarize note")
+    }
+    return res.json()
+  }
 
   async function onCreate() {
     if (!text) return
     setSubmitting(true)
     try {
+      toast("Generating note...")
+      setOpen(false)
       const res = await fetch("/api/notes/create-text", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,10 +71,19 @@ export function TextDialog( ) {
         const msg = await res.text()
         throw new Error(msg || "Failed to create note")
       }
-      // Optional: clear or close via DialogClose if desired
-      // const { id } = await res.json() // available if you want to use it later
+      const { id } = await res.json()
+      // Optimistically add note to list with generating status
+      const firstLine = text.split('\n').map(s => s.trim()).find(Boolean) || 'Untitled'
+      const now = new Date().toISOString()
+      emitNotesInsert({ id, title: firstLine.slice(0, 80), status: 'generating', created_at: now, updated_at: now })
+      const summaryResult = await summarize(id)
+      const resolvedTitle = (summaryResult && summaryResult.title) ? String(summaryResult.title) : firstLine.slice(0, 80)
+      emitNotesUpdate({ id, title: resolvedTitle, status: 'completed', updated_at: new Date().toISOString() })
+      toast.success("Note created successfully")
+      
     } catch (err) {
       console.error(err)
+      toast.error('Something went wrong. Try again.')
     } finally {
       setSubmitting(false)
     }
@@ -62,7 +91,7 @@ export function TextDialog( ) {
 
   return (
 
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild >
             
             <div className="flex items-center gap-3">

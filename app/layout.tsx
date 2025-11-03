@@ -3,6 +3,7 @@ import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignUpButton, UserBut
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { shadcn } from "@clerk/themes";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -36,6 +37,7 @@ export default function RootLayout({
           className={`${inter.variable} ${geistMono.variable} antialiased`}
         >
           {children}
+          <Toaster position="top-right" richColors closeButton />
         </body>
       </html>
     </ClerkProvider>

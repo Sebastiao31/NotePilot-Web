@@ -4,10 +4,12 @@ import * as React from "react"
 import NoteItem from "./note-item"
 import { useAuth } from "@clerk/nextjs"
 import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
+import { onNotesInsert, onNotesUpdate } from "@/lib/events"
 
 type NoteListItem = {
   id: string
   title: string
+  status?: "generating" | "completed"
   created_at: string
   updated_at: string
 }
@@ -39,6 +41,32 @@ export function NoteList() {
     load()
     return () => {
       mounted = false
+    }
+  }, [])
+
+  // Optimistic events from dialog
+  React.useEffect(() => {
+    const offInsert = onNotesInsert((payload) => {
+      setNotes((prev) => {
+        if (prev.some((n) => n.id === payload.id)) return prev
+        return [
+          {
+            id: payload.id,
+            title: payload.title,
+            status: payload.status,
+            created_at: payload.created_at || new Date().toISOString(),
+            updated_at: payload.updated_at || new Date().toISOString(),
+          },
+          ...prev,
+        ]
+      })
+    })
+    const offUpdate = onNotesUpdate((payload) => {
+      setNotes((prev) => prev.map((n) => (n.id === payload.id ? { ...n, status: payload.status || n.status, title: payload.title || n.title, updated_at: payload.updated_at || n.updated_at } : n)))
+    })
+    return () => {
+      offInsert()
+      offUpdate()
     }
   }, [])
 
@@ -74,17 +102,19 @@ export function NoteList() {
                   const next = exists ? prev.map((n) => (n.id === newRow.id ? { ...n, ...newRow } : n)) : [{
                     id: newRow.id,
                     title: newRow.title,
+                    status: newRow.status,
                     created_at: newRow.created_at,
                     updated_at: newRow.updated_at,
                   }, ...prev]
                   return next
                 }
                 if (eventType === "UPDATE") {
-                  return prev.map((n) =>
+                  const updated = prev.map((n) =>
                     n.id === newRow.id
-                      ? { ...n, title: newRow.title, updated_at: newRow.updated_at }
+                      ? { ...n, title: newRow.title, status: newRow.status, updated_at: newRow.updated_at }
                       : n
                   )
+                  return updated
                 }
                 if (eventType === "DELETE") {
                   return prev.filter((n) => n.id !== oldRow.id)
