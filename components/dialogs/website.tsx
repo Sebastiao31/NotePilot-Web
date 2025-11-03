@@ -31,13 +31,63 @@ import {
   } from "@/components/ui/menubar"
 import { IconBrandYoutubeFilled, IconWorld } from '@tabler/icons-react'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { emitNotesInsert, emitNotesUpdate } from '@/lib/events'
 
 
 export function WebsiteDialog( ) {
   const [websiteUrl, setWebsiteUrl] = useState("")
+  const [open, setOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const router = useRouter()
+
+  async function summarize(noteId: string) {
+    const res = await fetch("/api/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ noteId }),
+    })
+    if (!res.ok) {
+      const msg = await res.text()
+      throw new Error(msg || "Failed to summarize note")
+    }
+    return res.json()
+  }
+
+  async function onCreate() {
+    if (!websiteUrl) return
+    setSubmitting(true)
+    try {
+      toast("Fetching website and generating note...")
+      setOpen(false)
+      const res = await fetch("/api/notes/create-website", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: websiteUrl }),
+      })
+      if (!res.ok) {
+        const msg = await res.text()
+        throw new Error(msg || "Failed to create website note")
+      }
+      const { id, title } = await res.json()
+      const now = new Date().toISOString()
+      emitNotesInsert({ id, title: title || websiteUrl, status: 'generating', created_at: now, updated_at: now })
+      const summaryResult = await summarize(id)
+      const resolvedTitle = (summaryResult && summaryResult.title) ? String(summaryResult.title) : (title || websiteUrl)
+      emitNotesUpdate({ id, title: resolvedTitle, status: 'completed', updated_at: new Date().toISOString() })
+      toast.success("Website note created successfully")
+      router.push(`/notes/${id}`)
+    } catch (err) {
+      console.error(err)
+      toast.error('Something went wrong. Try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
   return (
 
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild >
             
             <div className="flex items-center gap-3">
@@ -73,7 +123,7 @@ export function WebsiteDialog( ) {
             <DialogClose asChild>
               <Button variant="ghost" className="rounded-full">Cancel</Button>
             </DialogClose>
-            <Button type="submit" disabled={!websiteUrl}>Create note</Button>
+            <Button type="button" disabled={!websiteUrl || submitting} onClick={onCreate}>{submitting ? 'Creating...' : 'Create note'}</Button>
           </DialogFooter>
         </DialogContent>
         </Dialog>

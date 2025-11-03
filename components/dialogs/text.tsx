@@ -80,6 +80,7 @@ export function TextDialog( ) {
       const resolvedTitle = (summaryResult && summaryResult.title) ? String(summaryResult.title) : firstLine.slice(0, 80)
       emitNotesUpdate({ id, title: resolvedTitle, status: 'completed', updated_at: new Date().toISOString() })
       toast.success("Note created successfully")
+      router.push(`/notes/${id}`)
       
     } catch (err) {
       console.error(err)
