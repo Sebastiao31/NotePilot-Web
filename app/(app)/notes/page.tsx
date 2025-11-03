@@ -26,9 +26,15 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar"
 import { IconCirclePlus, IconBrandYoutubeFilled, IconWorld, IconLetterCase, IconUpload, IconFileUploadFilled, IconFileMusicFilled } from "@tabler/icons-react"
+import { YoutubeDialog } from "@/components/dialogs/youtube"
+import { WebsiteDialog } from "@/components/dialogs/website"
+import { TextDialog } from "@/components/dialogs/text"
+
+
 
 export default function NotesPage() {
   return (
+    <main className="flex items-center justify-center mt-24">
     <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
@@ -40,7 +46,6 @@ export default function NotesPage() {
           your first note.
         </EmptyDescription>
       </EmptyHeader>
-      
 
       <Menubar className="hover:bg-transparent">
       <MenubarMenu>
@@ -49,39 +54,15 @@ export default function NotesPage() {
             <Button>Create Note</Button>
           </div>
           </MenubarTrigger>
-        <MenubarContent>
+        <MenubarContent align="center">
           <MenubarItem>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-badge-red-foreground rounded-md">
-                <IconBrandYoutubeFilled className="size-4 text-badge-red" />
-              </div>
-              <div className="flex flex-col pr-2">
-                <span>Youtube</span>
-                <span className="text-xs text-muted-foreground">Create note from youtube video</span>
-              </div>
-            </div>
+            <YoutubeDialog />
           </MenubarItem>
           <MenubarItem>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-badge-purple-foreground rounded-md">
-                <IconWorld className="size-4 text-badge-purple" />
-              </div>
-              <div className="flex flex-col pr-2">
-                <span>Website</span>
-                <span className="text-xs text-muted-foreground">Create note from website link</span>
-              </div>
-            </div>
+            <WebsiteDialog />
           </MenubarItem>
           <MenubarItem>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-badge-blue-foreground rounded-md">
-                <IconLetterCase className="size-4 text-badge-blue" />
-              </div>
-              <div className="flex flex-col pr-2">
-                <span>Text</span>
-                <span className="text-xs text-muted-foreground">Create note from plain text</span>
-              </div>
-            </div>
+            <TextDialog />
           </MenubarItem>
           
           <MenubarSub>
@@ -113,6 +94,11 @@ export default function NotesPage() {
       
     </Menubar>
       
+      
+
+    
+      
     </Empty>
+    </main>
   )
 }

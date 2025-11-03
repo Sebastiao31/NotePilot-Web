@@ -5,7 +5,6 @@ export interface Notes {
   type: "youtube" | "website" | "text" | "pdf" | "audio"
   url: string
   content: string
-  metadata: Record<string, any>
   status: "generating" | "completed" 
   transcript: string
   summary: string

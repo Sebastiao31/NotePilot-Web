@@ -7,6 +7,7 @@ import { useSidebar } from "@/components/ui/sidebar"
 import { IconDotsVertical, IconFolder, IconChevronsLeft } from "@tabler/icons-react"
 import { Button } from "./ui/button"
 import { SearchNotes } from "./search-notes"
+import NoteList from "./note-list"
 
 
 export function NoteSidebar() {
@@ -42,6 +43,7 @@ export function NoteSidebar() {
         <div className="flex-1 overflow-y-auto p-3 ">
           
           <div>
+            <NoteList />
         </div>
         </div>
 

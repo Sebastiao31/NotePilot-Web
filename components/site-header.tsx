@@ -7,6 +7,21 @@ import { BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, Br
 import { Button } from './ui/button'
 import { Switch } from "@/components/ui/switch"
 import { useEditMode } from '@/components/edit-mode-provider'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { IconFileUploadFilled } from '@tabler/icons-react'
 
 export function SiteHeader() {
     const { editMode, setEditMode } = useEditMode()
@@ -32,9 +47,19 @@ export function SiteHeader() {
               <Button variant="ghost">
                 Transcript
               </Button>
-              <Button variant="ghost">
-                Export
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost">
+                    Export
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="mr-2">
+                  <DropdownMenuItem>
+                    <IconFileUploadFilled className="size-4" />
+                    <span>Export PDF</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>

@@ -24,8 +24,6 @@ export function FloatingBar() {
   const { state, isMobile } = useSidebar()
   const { editor } = useEditorBridge()
 
-  if (!editMode) return null
-
   const leftOffset = isMobile
     ? 0
     : (state === "expanded" ? APP_SIDEBAR_WIDTH_EXPANDED : APP_SIDEBAR_WIDTH_ICON) + (noteOpen ? noteWidth : 0)
@@ -91,9 +89,15 @@ export function FloatingBar() {
 
   return (
     <div
-      className="fixed bottom-0 mb-4 mx-4 z-40 border w-fit p-1 rounded-lg"
+      className="fixed bottom-0 z-40"
       style={{ left: leftOffset, right: rightOffset }}
+      aria-hidden={!editMode}
     >
+      <div className={[
+        "mb-4 px-4 transition-all duration-300 ease-out flex justify-center",
+        editMode ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0 pointer-events-none",
+      ].join(" ")}>
+        <div className="border w-fit p-1 rounded-lg bg-background shadow-sm">
       <div className="flex items-center gap-2">
       
 
@@ -207,6 +211,8 @@ export function FloatingBar() {
         </div>
 
        
+      </div>
+        </div>
       </div>
     </div>
   )

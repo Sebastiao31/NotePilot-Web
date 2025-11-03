@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Hide scrollbar for Chrome, Safari, and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+html, body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -341,6 +352,54 @@
     cursor: ew-resize;
     cursor: col-resize;
   }
+
+  /* Mathematics extension styles */
+  .tiptap-mathematics-render {
+    padding: 0 0.25rem;
+
+    &--editable {
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #eee;
+      }
+    }
+  }
+
+  .tiptap-mathematics-render {
+    border-radius: 0.25rem;
+
+    &[data-type='inline-math'] {
+      display: inline-block;
+    }
+
+    &[data-type='block-math'] {
+      display: block;
+      margin: 1rem 0;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    &.inline-math-error,
+    &.block-math-error {
+      background: var(--red-light);
+      color: var(--red);
+      border: 1px solid var(--red-dark);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+    }
+  }
  
 
+}
+
+/* Remove focus outline/border around the rich text editor when focused */
+.ProseMirror:focus,
+.ProseMirror:focus-visible,
+.ProseMirror:focus-within,
+.tiptap:focus,
+.tiptap:focus-visible,
+.tiptap:focus-within {
+  outline: none;
 }

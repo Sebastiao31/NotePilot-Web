@@ -36,6 +36,30 @@ import { Textarea } from '../ui/textarea'
 
 export function TextDialog( ) {
   const [text, setText] = useState("")
+  const [submitting, setSubmitting] = useState(false)
+
+  async function onCreate() {
+    if (!text) return
+    setSubmitting(true)
+    try {
+      const res = await fetch("/api/notes/create-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      })
+      if (!res.ok) {
+        const msg = await res.text()
+        throw new Error(msg || "Failed to create note")
+      }
+      // Optional: clear or close via DialogClose if desired
+      // const { id } = await res.json() // available if you want to use it later
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   return (
 
         <Dialog>
@@ -71,7 +95,13 @@ export function TextDialog( ) {
             <DialogClose asChild>
               <Button variant="ghost" className="rounded-full">Cancel</Button>
             </DialogClose>
-            <Button type="submit" disabled={!text}>Create note</Button>
+            <Button
+              type="button"
+              disabled={!text || submitting}
+              onClick={onCreate}
+            >
+              {submitting ? "Creating..." : "Create note"}
+            </Button>
           </DialogFooter>
         </DialogContent>
         </Dialog>
