@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { IconFolder, IconLoader2, IconPointFilled } from "@tabler/icons-react"
+import {NoteOptions} from "./note-options"
 
 type NoteListItem = {
   id: string
@@ -28,10 +29,11 @@ export function NoteItem({ note, className }: { note: NoteListItem; className?: 
         <span className="ml-2 text-xs text-muted-foreground animate-pulse">Generating…</span>
       </span>
     ) : (
+      <span className="flex items-center w-full justify-between gap-2 px-3 py-2 rounded-md hover:bg-muted/70 transition-colors">
       <Link 
       href={`/notes/${note.id}`}
       className={cn(
-        "flex flex-col gap-2 px-3 py-2 rounded-md hover:bg-muted/70 transition-colors",
+        "flex flex-col gap-2 rounded-md hover:bg-muted/70 transition-colors flex-1 min-w-0",
         className
       )}
       >
@@ -47,6 +49,10 @@ export function NoteItem({ note, className }: { note: NoteListItem; className?: 
         </span>
       </div>
       </Link>
+      <div className="shrink-0">
+        <NoteOptions noteId={note.id} />
+      </div>
+      </span>
     )}
 
     </div>

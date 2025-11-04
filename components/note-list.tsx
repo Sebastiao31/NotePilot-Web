@@ -4,7 +4,7 @@ import * as React from "react"
 import NoteItem from "./note-item"
 import { useAuth } from "@clerk/nextjs"
 import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
-import { onNotesInsert, onNotesUpdate } from "@/lib/events"
+import { onNotesInsert, onNotesUpdate, onNotesDelete } from "@/lib/events"
 
 type NoteListItem = {
   id: string
@@ -64,9 +64,13 @@ export function NoteList() {
     const offUpdate = onNotesUpdate((payload) => {
       setNotes((prev) => prev.map((n) => (n.id === payload.id ? { ...n, status: payload.status || n.status, title: payload.title || n.title, updated_at: payload.updated_at || n.updated_at } : n)))
     })
+    const offDelete = onNotesDelete(({ id }) => {
+      setNotes((prev) => prev.filter((n) => n.id !== id))
+    })
     return () => {
       offInsert()
       offUpdate()
+      offDelete()
     }
   }, [])
 

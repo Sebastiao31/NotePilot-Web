@@ -25,6 +25,10 @@ export function emitNotesUpdate(payload: NotesInsertEvent) {
   bus.dispatchEvent(new CustomEvent("notes:update", { detail: payload }))
 }
 
+export function emitNotesDelete(id: string) {
+  bus.dispatchEvent(new CustomEvent("notes:delete", { detail: { id } }))
+}
+
 export function onNotesInsert(handler: (payload: NotesInsertEvent) => void) {
   const listener = (e: Event) => handler((e as CustomEvent).detail)
   bus.addEventListener("notes:insert", listener)
@@ -35,6 +39,12 @@ export function onNotesUpdate(handler: (payload: NotesInsertEvent) => void) {
   const listener = (e: Event) => handler((e as CustomEvent).detail)
   bus.addEventListener("notes:update", listener)
   return () => bus.removeEventListener("notes:update", listener)
+}
+
+export function onNotesDelete(handler: (payload: { id: string }) => void) {
+  const listener = (e: Event) => handler((e as CustomEvent).detail)
+  bus.addEventListener("notes:delete", listener)
+  return () => bus.removeEventListener("notes:delete", listener)
 }
 
 
