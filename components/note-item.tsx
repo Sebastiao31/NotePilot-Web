@@ -2,16 +2,21 @@
 
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { IconLoader2 } from "@tabler/icons-react"
+import { IconFolder, IconLoader2, IconPointFilled } from "@tabler/icons-react"
 
 type NoteListItem = {
   id: string
   title: string
   status?: "generating" | "completed"
+  created_at: string
   updated_at: string
 }
 
 export function NoteItem({ note, className }: { note: NoteListItem; className?: string }) {
+  const created = new Date(note.created_at)
+  const isValidDate = !isNaN(created.getTime())
+  const month = isValidDate ? created.toLocaleString('en-US', { month: 'short' }) : ''
+  const day = isValidDate ? created.getDate() : ''
   return (
 
     <div>
@@ -26,11 +31,21 @@ export function NoteItem({ note, className }: { note: NoteListItem; className?: 
       <Link 
       href={`/notes/${note.id}`}
       className={cn(
-        "flex items-center justify-between px-3 py-2 rounded-md hover:bg-muted/70 transition-colors",
+        "flex flex-col gap-2 px-3 py-2 rounded-md hover:bg-muted/70 transition-colors",
         className
       )}
       >
       <span className="truncate text-sm text-foreground">{note.title || "Untitled"}</span>
+      <div className="flex items-center gap-2" >
+        <span className="flex items-center gap-1">
+          <IconFolder className="size-4 text-muted-foreground" />
+          <span className="text-xs text-muted-foreground font-medium">No folder</span>
+        </span>
+        <IconPointFilled className="size-2 text-muted-foreground" />
+        <span className="text-xs text-muted-foreground font-medium">
+          {isValidDate ? `${month} ${day}` : ''}
+        </span>
+      </div>
       </Link>
     )}
 
