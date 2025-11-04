@@ -1,7 +1,20 @@
-import { IconFileText } from "@tabler/icons-react"
-import { ArrowUpRightIcon } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
+"use client"
+import React, { useState } from 'react'
+import { YoutubeDialog } from "@/components/dialogs/youtube"
+import { WebsiteDialog } from "@/components/dialogs/website"
+import { TextDialog } from "@/components/dialogs/text"
+import { PdfDialog } from '@/components/dialogs/pdf'
+import { IconBrandYoutubeFilled, IconCirclePlus, IconLetterCase, IconUpload, IconWorld, IconFileMusicFilled, IconFileUploadFilled } from "@tabler/icons-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from '@/components/ui/button'
 import {
   Empty,
   EmptyContent,
@@ -10,30 +23,17 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import {
-  Menubar,
-  MenubarCheckboxItem,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
-  MenubarTrigger,
-} from "@/components/ui/menubar"
-import { IconCirclePlus, IconBrandYoutubeFilled, IconWorld, IconLetterCase, IconUpload, IconFileUploadFilled, IconFileMusicFilled } from "@tabler/icons-react"
-import { YoutubeDialog } from "@/components/dialogs/youtube"
-import { WebsiteDialog } from "@/components/dialogs/website"
-import { TextDialog } from "@/components/dialogs/text"
-import { Input } from "@/components/ui/input"
+import { IconFileText } from '@tabler/icons-react'
 
 
 
 export default function NotesPage() {
+
+  const [youtubeOpen, setYoutubeOpen] = useState(false)
+  const [websiteOpen, setWebsiteOpen] = useState(false)
+  const [textOpen, setTextOpen] = useState(false)
+  const [pdfOpen, setPdfOpen] = useState(false)
+
   return (
     <main className="flex items-center justify-center mt-24">
     <Empty>
@@ -48,26 +48,48 @@ export default function NotesPage() {
         </EmptyDescription>
       </EmptyHeader>
 
-      <Menubar className="hover:bg-transparent">
-      <MenubarMenu>
-        <MenubarTrigger className="w-full gap-2" >
-          <div className="flex gap-2">
-            <Button>Create Note</Button>
+      <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button >
+          Create note
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="ml-2">
+        <DropdownMenuItem onClick={() => setYoutubeOpen(true)}>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-badge-red-foreground rounded-md">
+              <IconBrandYoutubeFilled className="size-4 text-badge-red" />
+            </div>
+            <div className="flex flex-col pr-2">
+              <span>Youtube</span>
+              <span className="text-xs text-muted-foreground">Create note from youtube video</span>
+            </div>
           </div>
-          </MenubarTrigger>
-        <MenubarContent align="center">
-          <MenubarItem>
-            <YoutubeDialog />
-          </MenubarItem>
-          <MenubarItem>
-            <WebsiteDialog />
-          </MenubarItem>
-          <MenubarItem>
-            <TextDialog />
-          </MenubarItem>
-          
-          <MenubarSub>
-            <MenubarSubTrigger>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setWebsiteOpen(true)}>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-badge-purple-foreground rounded-md">
+              <IconWorld className="size-4 text-badge-purple" />
+            </div>
+            <div className="flex flex-col pr-2">
+              <span>Website</span>
+              <span className="text-xs text-muted-foreground">Create note from website link</span>
+            </div>
+          </div>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTextOpen(true)}>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-badge-blue-foreground rounded-md">
+              <IconLetterCase className="size-4 text-badge-blue" />
+            </div>
+            <div className="flex flex-col pr-2">
+              <span>Text</span>
+              <span className="text-xs text-muted-foreground">Create note from plain text</span>
+            </div>
+          </div>
+        </DropdownMenuItem>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-badge-green-foreground rounded-md">
                 <IconUpload className="size-4 text-badge-green" />
@@ -77,23 +99,30 @@ export default function NotesPage() {
                 <span className="text-xs text-muted-foreground">Create note from file</span>
               </div>
             </div>
-
-
-            </MenubarSubTrigger>
-            <MenubarSubContent>
-              <MenubarItem>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            <DropdownMenuItem onClick={() => setPdfOpen(true)}>
+              <div className="flex items-center gap-3">
                 <IconFileUploadFilled className="size-4" />
-                Upload PDF</MenubarItem>
-              <MenubarItem>
+                <span>Upload PDF</span>
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
               <IconFileMusicFilled className="size-4" />
-                Upload Audio</MenubarItem>
-            </MenubarSubContent>
-          </MenubarSub>
-          
-        </MenubarContent>
-      </MenubarMenu>
+              <span className="ml-2">Upload Audio</span>
+            </DropdownMenuItem>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    {/* Controlled dialogs mounted outside the dropdown */}
+    <YoutubeDialog open={youtubeOpen} onOpenChange={setYoutubeOpen} />
+    <WebsiteDialog open={websiteOpen} onOpenChange={setWebsiteOpen} />
+    <TextDialog open={textOpen} onOpenChange={setTextOpen} />
+    <PdfDialog open={pdfOpen} onOpenChange={setPdfOpen} />
+
       
-    </Menubar>
 
       
       
