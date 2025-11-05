@@ -8,6 +8,7 @@ import { IconDotsVertical, IconFolder, IconChevronsLeft } from "@tabler/icons-re
 import { Button } from "./ui/button"
 import { SearchNotes } from "./search-notes"
 import NoteList from "./note-list"
+import { NoteFilter } from "./note-filter"
 
 
 export function NoteSidebar() {
@@ -30,7 +31,7 @@ export function NoteSidebar() {
       <div className="flex h-full flex-col">
         <div className="p-3 px-4 flex items-center gap-4 justify-between">
 
-            <span className="text-sm font-regular">Notes</span>
+            <NoteFilter />
           
           <Button variant="ghost" size="icon" onClick={toggle} className="size-7 ">
             <IconChevronsLeft className="text-accent-foreground" />

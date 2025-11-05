@@ -13,7 +13,7 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
 import { Button } from './ui/button'
-import { IconDots, IconDotsVertical, IconEdit, IconFolderUp, IconTrash } from '@tabler/icons-react'
+import { IconDots, IconDotsVertical, IconEdit, IconFolderUp, IconForms, IconTrash } from '@tabler/icons-react'
 import {DeleteDialog} from "./dialogs/delete"
 
 
@@ -34,8 +34,8 @@ export function NoteOptions({ noteId }: { noteId: string }) {
                     Options
                 </DropdownMenuLabel>
                 <DropdownMenuItem>
-                    <IconEdit className="size-4" />
-                    Edit
+                    <IconForms className="size-4" />
+                    Change name
                 </DropdownMenuItem>
 
                 <DropdownMenuSub>
