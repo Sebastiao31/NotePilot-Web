@@ -36,7 +36,7 @@ export function SearchNotes() {
   return (
     <div className="grid w-full gap-6">
       <InputGroup className="rounded-lg">
-        <InputGroupInput placeholder="Search..." value={query} onChange={handleChange} />
+        <InputGroupInput placeholder="Search note" value={query} onChange={handleChange} />
         <InputGroupAddon>
           <Search />
         </InputGroupAddon>

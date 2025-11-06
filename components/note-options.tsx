@@ -23,10 +23,11 @@ import { useFolders } from '@/hooks/use-folders'
 import { useAuth } from '@clerk/nextjs'
 import { createSupabaseClientBrowserAuthed } from '@/lib/supabase-browser'
 import { emitNotesUpdate } from '@/lib/events'
+import { BrushCleaning } from 'lucide-react'
 
 
 
-export function NoteOptions({ noteId }: { noteId: string }) {
+export function NoteOptions({ noteId, folderId }: { noteId: string; folderId?: string | null }) {
     const [deleteOpen, setDeleteOpen] = useState(false)
     const router = useRouter()
     const { folders } = useFolders()
@@ -43,6 +44,21 @@ export function NoteOptions({ noteId }: { noteId: string }) {
           emitNotesUpdate({ id: noteId, updated_at: new Date().toISOString() } as any)
           // also include folder_id to update list optimistically
           emitNotesUpdate({ id: noteId, folder_id: folderId, updated_at: new Date().toISOString() } as any)
+        }
+      } catch {
+        // ignore for now
+      }
+    }
+
+    async function handleClearFolder() {
+      try {
+        const token = await getToken({ template: 'supabase' })
+        if (!token) return
+        const supabase = createSupabaseClientBrowserAuthed(token)
+        try { (supabase as any).realtime.setAuth(token) } catch {}
+        const { error } = await supabase.from('notes').update({ folder_id: null }).eq('id', noteId)
+        if (!error) {
+          emitNotesUpdate({ id: noteId, folder_id: null, updated_at: new Date().toISOString() } as any)
         }
       } catch {
         // ignore for now
@@ -89,6 +105,12 @@ export function NoteOptions({ noteId }: { noteId: string }) {
                 </DropdownMenuSub>
 
                 <DropdownMenuSeparator/>
+                {folderId ? (
+                  <DropdownMenuItem onClick={handleClearFolder}>
+                    <BrushCleaning />
+                    Clear Folder
+                  </DropdownMenuItem>
+                ) : null}
                 <DropdownMenuItem variant="destructive" onClick={() => setDeleteOpen(true)}>
                     <IconTrash className="size-4" />
                     Delete

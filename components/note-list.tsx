@@ -66,7 +66,17 @@ export function NoteList() {
       })
     })
     const offUpdate = onNotesUpdate((payload) => {
-      setNotes((prev) => prev.map((n) => (n.id === payload.id ? { ...n, status: payload.status || n.status, title: payload.title || n.title, updated_at: payload.updated_at || n.updated_at, folder_id: (payload as any).folder_id ?? n.folder_id } : n)))
+      setNotes((prev) => prev.map((n) => {
+        if (n.id !== payload.id) return n
+        const hasFolderId = Object.prototype.hasOwnProperty.call(payload as any, 'folder_id')
+        return {
+          ...n,
+          status: payload.status || n.status,
+          title: payload.title || n.title,
+          updated_at: payload.updated_at || n.updated_at,
+          folder_id: hasFolderId ? (payload as any).folder_id : n.folder_id,
+        }
+      }))
     })
     const offDelete = onNotesDelete(({ id }) => {
       setNotes((prev) => prev.filter((n) => n.id !== id))
@@ -130,11 +140,17 @@ export function NoteList() {
                   return next
                 }
                 if (eventType === "UPDATE") {
-                  const updated = prev.map((n) =>
-                    n.id === newRow.id
-                      ? { ...n, title: newRow.title, status: newRow.status, updated_at: newRow.updated_at, folder_id: newRow.folder_id ?? n.folder_id }
-                      : n
-                  )
+                  const updated = prev.map((n) => {
+                    if (n.id !== newRow.id) return n
+                    const hasFolderId = Object.prototype.hasOwnProperty.call(newRow, 'folder_id')
+                    return {
+                      ...n,
+                      title: newRow.title,
+                      status: newRow.status,
+                      updated_at: newRow.updated_at,
+                      folder_id: hasFolderId ? newRow.folder_id : n.folder_id,
+                    }
+                  })
                   return updated
                 }
                 if (eventType === "DELETE") {

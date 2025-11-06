@@ -53,7 +53,7 @@ export function NoteItem({ note, className }: { note: NoteListItem; className?: 
       </div>
       </Link>
       <div className="shrink-0">
-        <NoteOptions noteId={note.id} />
+        <NoteOptions noteId={note.id} folderId={(note as any).folder_id ?? null} />
       </div>
       </span>
     )}
