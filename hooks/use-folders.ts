@@ -3,7 +3,7 @@
 import * as React from "react"
 import { useAuth } from "@clerk/nextjs"
 import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
-import { onFoldersInsert } from "@/lib/events"
+import { onFoldersInsert, onFoldersUpdate, onFoldersDelete } from "@/lib/events"
 
 export type Folder = {
   id: string
@@ -56,6 +56,26 @@ export function useFolders() {
         }, ...prev]
         return next
       })
+    })
+    return () => off()
+  }, [])
+
+  // Optimistic update listener
+  React.useEffect(() => {
+    const off = onFoldersUpdate((payload) => {
+      setFolders((prev) => prev.map((f) => f.id === payload.id ? {
+        ...f,
+        name: payload.name !== undefined ? payload.name : f.name,
+        color: payload.color !== undefined ? payload.color : f.color,
+      } : f))
+    })
+    return () => off()
+  }, [])
+
+  // Optimistic delete listener
+  React.useEffect(() => {
+    const off = onFoldersDelete(({ id }) => {
+      setFolders((prev) => prev.filter((f) => f.id !== id))
     })
     return () => off()
   }, [])

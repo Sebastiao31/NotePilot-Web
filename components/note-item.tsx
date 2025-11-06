@@ -42,9 +42,9 @@ export function NoteItem({ note, className }: { note: NoteListItem; className?: 
       >
       <span className="truncate text-sm text-foreground">{note.title || "Untitled"}</span>
       <div className="flex items-center gap-2" >
-        <span className="flex items-center gap-1">
-          <IconFolder className="size-4" style={{ color: folder?.color || 'var(--color-muted-foreground)' }} />
-          <span className="text-xs text-muted-foreground font-medium">{folder ? folder.name : 'No folder'}</span>
+        <span className="flex items-center gap-1 min-w-0 max-w-[50%]">
+          <IconFolder className="size-4 shrink-0" style={{ color: folder?.color || 'var(--color-muted-foreground)' }} />
+          <span className="text-xs text-muted-foreground font-medium truncate">{folder ? folder.name : 'No folder'}</span>
         </span>
         <IconPointFilled className="size-2 text-muted-foreground" />
         <span className="text-xs text-muted-foreground font-medium">

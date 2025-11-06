@@ -17,16 +17,18 @@ import { CreateFolderBtn } from './create-folder-btn'
 import { BrushCleaning } from 'lucide-react'
 import { useFolders } from '@/hooks/use-folders'
 import { emitFolderFilterChange } from '@/lib/events'
+import { EditFolders } from './edit-folders'
 
 export function NoteFilter() {
     const { folders } = useFolders()
+    const [selectedFolderId, setSelectedFolderId] = React.useState<string>("all")
 
     return (
-        <Select defaultValue="all" onValueChange={(val) => emitFolderFilterChange(val)}>
+        <Select defaultValue="all" onValueChange={(val) => { setSelectedFolderId(val); emitFolderFilterChange(val) }}>
       <SelectTrigger className="border-none shadow-none bg-background max-w-[200px]">
         <SelectValue className="truncate" placeholder="Select a folder" />
       </SelectTrigger>
-      <SelectContent align="start">
+      <SelectContent align="start" >
         <SelectGroup className="max-h-[200px] overflow-y-auto">
             <ScrollArea>
           <SelectLabel>Folders</SelectLabel>
@@ -47,10 +49,7 @@ export function NoteFilter() {
         <SelectGroup>
             <CreateFolderBtn />
 
-            <Button variant="ghost" size="sm" className="w-full justify-start">
-                <IconEdit className="size-4" />
-                Edit folders
-            </Button>
+            <EditFolders selectedFolderId={selectedFolderId} />
 
             
         </SelectGroup>

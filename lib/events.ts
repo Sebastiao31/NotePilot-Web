@@ -14,6 +14,12 @@ export type FoldersInsertEvent = {
   created_at?: string
 }
 
+export type FoldersUpdateEvent = {
+  id: string
+  name?: string
+  color?: string | null
+}
+
 const bus: EventTarget = ((): EventTarget => {
   if (typeof window !== "undefined") {
     // @ts-ignore
@@ -62,6 +68,26 @@ export function onFoldersInsert(handler: (payload: FoldersInsertEvent) => void) 
   const listener = (e: Event) => handler((e as CustomEvent).detail)
   bus.addEventListener("folders:insert", listener)
   return () => bus.removeEventListener("folders:insert", listener)
+}
+
+export function emitFoldersUpdate(payload: FoldersUpdateEvent) {
+  bus.dispatchEvent(new CustomEvent("folders:update", { detail: payload }))
+}
+
+export function onFoldersUpdate(handler: (payload: FoldersUpdateEvent) => void) {
+  const listener = (e: Event) => handler((e as CustomEvent).detail)
+  bus.addEventListener("folders:update", listener)
+  return () => bus.removeEventListener("folders:update", listener)
+}
+
+export function emitFoldersDelete(id: string) {
+  bus.dispatchEvent(new CustomEvent("folders:delete", { detail: { id } }))
+}
+
+export function onFoldersDelete(handler: (payload: { id: string }) => void) {
+  const listener = (e: Event) => handler((e as CustomEvent).detail)
+  bus.addEventListener("folders:delete", listener)
+  return () => bus.removeEventListener("folders:delete", listener)
 }
 
 // Folder filter selection
