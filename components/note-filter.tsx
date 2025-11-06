@@ -16,14 +16,15 @@ import { IconEdit, IconFolder, IconListDetails } from '@tabler/icons-react'
 import { CreateFolderBtn } from './create-folder-btn'
 import { BrushCleaning } from 'lucide-react'
 import { useFolders } from '@/hooks/use-folders'
+import { emitFolderFilterChange } from '@/lib/events'
 
 export function NoteFilter() {
     const { folders } = useFolders()
 
     return (
-        <Select>
+        <Select defaultValue="all" onValueChange={(val) => emitFolderFilterChange(val)}>
       <SelectTrigger className="border-none shadow-none bg-background max-w-[200px]">
-        <SelectValue className="truncate" placeholder="Select a folder" defaultValue="all" />
+        <SelectValue className="truncate" placeholder="Select a folder" />
       </SelectTrigger>
       <SelectContent align="start">
         <SelectGroup className="max-h-[200px] overflow-y-auto">

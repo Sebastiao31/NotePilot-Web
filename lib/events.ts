@@ -64,4 +64,30 @@ export function onFoldersInsert(handler: (payload: FoldersInsertEvent) => void) 
   return () => bus.removeEventListener("folders:insert", listener)
 }
 
+// Folder filter selection
+export type FolderFilterValue = string // 'all' or folder id
+
+export function emitFolderFilterChange(folderId: FolderFilterValue) {
+  bus.dispatchEvent(new CustomEvent("folders:filter", { detail: folderId }))
+}
+
+export function onFolderFilterChange(handler: (folderId: FolderFilterValue) => void) {
+  const listener = (e: Event) => handler((e as CustomEvent).detail)
+  bus.addEventListener("folders:filter", listener)
+  return () => bus.removeEventListener("folders:filter", listener)
+}
+
+// Notes search query
+export type NotesSearchValue = string
+
+export function emitNotesSearchChange(query: NotesSearchValue) {
+  bus.dispatchEvent(new CustomEvent("notes:search", { detail: query }))
+}
+
+export function onNotesSearchChange(handler: (query: NotesSearchValue) => void) {
+  const listener = (e: Event) => handler((e as CustomEvent).detail)
+  bus.addEventListener("notes:search", listener)
+  return () => bus.removeEventListener("notes:search", listener)
+}
+
 

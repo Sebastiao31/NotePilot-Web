@@ -4,7 +4,7 @@ import * as React from "react"
 import NoteItem from "./note-item"
 import { useAuth } from "@clerk/nextjs"
 import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
-import { onNotesInsert, onNotesUpdate, onNotesDelete } from "@/lib/events"
+import { onNotesInsert, onNotesUpdate, onNotesDelete, onFolderFilterChange, onNotesSearchChange } from "@/lib/events"
 
 type NoteListItem = {
   id: string
@@ -20,6 +20,8 @@ export function NoteList() {
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
   const { isSignedIn, userId, getToken } = useAuth()
+  const [filterFolderId, setFilterFolderId] = React.useState<string>("all")
+  const [searchQuery, setSearchQuery] = React.useState<string>("")
 
   React.useEffect(() => {
     let mounted = true
@@ -74,6 +76,18 @@ export function NoteList() {
       offUpdate()
       offDelete()
     }
+  }, [])
+
+  // Listen to folder filter changes
+  React.useEffect(() => {
+    const off = onFolderFilterChange((folderId) => setFilterFolderId(folderId))
+    return () => off()
+  }, [])
+
+  // Listen to search query changes
+  React.useEffect(() => {
+    const off = onNotesSearchChange((q) => setSearchQuery(q))
+    return () => off()
   }, [])
 
   // Realtime subscription for notes changes
@@ -164,9 +178,17 @@ export function NoteList() {
     return <div className="text-sm text-muted-foreground">No notes yet</div>
   }
 
+  const visibleNotesFolder = filterFolderId === "all"
+    ? notes
+    : notes.filter((n) => (n.folder_id || null) === filterFolderId)
+
+  const visibleNotes = searchQuery.trim()
+    ? visibleNotesFolder.filter((n) => (n.title || "").toLowerCase().includes(searchQuery.trim().toLowerCase()))
+    : visibleNotesFolder
+
   return (
     <div className="space-y-1">
-      {notes.map((n) => (
+      {visibleNotes.map((n) => (
         <NoteItem key={n.id} note={n} />
       ))}
     </div>

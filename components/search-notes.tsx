@@ -21,12 +21,22 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import * as React from "react"
+import { emitNotesSearchChange } from "@/lib/events"
 
 export function SearchNotes() {
+  const [query, setQuery] = React.useState("")
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const q = e.target.value
+    setQuery(q)
+    emitNotesSearchChange(q)
+  }
+
   return (
     <div className="grid w-full gap-6">
       <InputGroup className="rounded-lg">
-        <InputGroupInput placeholder="Search..." />
+        <InputGroupInput placeholder="Search..." value={query} onChange={handleChange} />
         <InputGroupAddon>
           <Search />
         </InputGroupAddon>
