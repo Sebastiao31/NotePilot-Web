@@ -11,7 +11,6 @@ export type FoldersInsertEvent = {
   id: string
   name: string
   color: string | null
-  note_id: string | null
   created_at?: string
 }
 

@@ -65,7 +65,6 @@ export function CreateFolderBtn({ value, onChange, className, noteId }: ColorPic
         setError(null)
         setCreating(true)
         try {
-          const nid = noteId ?? null
           const token = await getToken({ template: 'supabase' })
           if (!token) throw new Error('Auth error')
           const supabase = createSupabaseClientBrowserAuthed(token)
@@ -73,8 +72,8 @@ export function CreateFolderBtn({ value, onChange, className, noteId }: ColorPic
 
           const { data, error: insertError } = await supabase
             .from('folders')
-            .insert({ name: folderName.trim(), color: selected, note_id: nid })
-            .select('id, name, color, note_id, created_at')
+            .insert({ name: folderName.trim(), color: selected })
+            .select('id, name, color, created_at')
             .single()
           if (insertError) throw insertError
 
@@ -83,7 +82,6 @@ export function CreateFolderBtn({ value, onChange, className, noteId }: ColorPic
               id: data.id,
               name: data.name,
               color: data.color,
-              note_id: data.note_id,
               created_at: data.created_at,
             })
           }

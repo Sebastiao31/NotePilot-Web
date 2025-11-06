@@ -4,6 +4,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { IconFolder, IconLoader2, IconPointFilled } from "@tabler/icons-react"
 import {NoteOptions} from "./note-options"
+import { useFolders } from "@/hooks/use-folders"
 
 type NoteListItem = {
   id: string
@@ -18,6 +19,8 @@ export function NoteItem({ note, className }: { note: NoteListItem; className?: 
   const isValidDate = !isNaN(created.getTime())
   const month = isValidDate ? created.toLocaleString('en-US', { month: 'short' }) : ''
   const day = isValidDate ? created.getDate() : ''
+  const { folders } = useFolders()
+  const folder = folders.find((f) => f.id === (note as any).folder_id)
   return (
 
     <div>
@@ -40,8 +43,8 @@ export function NoteItem({ note, className }: { note: NoteListItem; className?: 
       <span className="truncate text-sm text-foreground">{note.title || "Untitled"}</span>
       <div className="flex items-center gap-2" >
         <span className="flex items-center gap-1">
-          <IconFolder className="size-4 text-muted-foreground" />
-          <span className="text-xs text-muted-foreground font-medium">No folder</span>
+          <IconFolder className="size-4" style={{ color: folder?.color || 'var(--color-muted-foreground)' }} />
+          <span className="text-xs text-muted-foreground font-medium">{folder ? folder.name : 'No folder'}</span>
         </span>
         <IconPointFilled className="size-2 text-muted-foreground" />
         <span className="text-xs text-muted-foreground font-medium">

@@ -12,6 +12,7 @@ type NoteListItem = {
   status?: "generating" | "completed"
   created_at: string
   updated_at: string
+  folder_id?: string | null
 }
 
 export function NoteList() {
@@ -56,13 +57,14 @@ export function NoteList() {
             status: payload.status,
             created_at: payload.created_at || new Date().toISOString(),
             updated_at: payload.updated_at || new Date().toISOString(),
+            folder_id: (payload as any).folder_id ?? null,
           },
           ...prev,
         ]
       })
     })
     const offUpdate = onNotesUpdate((payload) => {
-      setNotes((prev) => prev.map((n) => (n.id === payload.id ? { ...n, status: payload.status || n.status, title: payload.title || n.title, updated_at: payload.updated_at || n.updated_at } : n)))
+      setNotes((prev) => prev.map((n) => (n.id === payload.id ? { ...n, status: payload.status || n.status, title: payload.title || n.title, updated_at: payload.updated_at || n.updated_at, folder_id: (payload as any).folder_id ?? n.folder_id } : n)))
     })
     const offDelete = onNotesDelete(({ id }) => {
       setNotes((prev) => prev.filter((n) => n.id !== id))
@@ -109,13 +111,14 @@ export function NoteList() {
                     status: newRow.status,
                     created_at: newRow.created_at,
                     updated_at: newRow.updated_at,
+                    folder_id: newRow.folder_id ?? null,
                   }, ...prev]
                   return next
                 }
                 if (eventType === "UPDATE") {
                   const updated = prev.map((n) =>
                     n.id === newRow.id
-                      ? { ...n, title: newRow.title, status: newRow.status, updated_at: newRow.updated_at }
+                      ? { ...n, title: newRow.title, status: newRow.status, updated_at: newRow.updated_at, folder_id: newRow.folder_id ?? n.folder_id }
                       : n
                   )
                   return updated

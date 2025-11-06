@@ -12,7 +12,7 @@ export async function GET() {
     const supabase = await createSupabaseClient();
     const { data, error } = await supabase
       .from("notes")
-      .select("id, title, status, created_at, updated_at")
+      .select("id, title, status, created_at, updated_at, folder_id")
       .eq("user_id", userId)
       .order("updated_at", { ascending: false });
 

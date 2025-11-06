@@ -9,7 +9,6 @@ export type Folder = {
   id: string
   name: string
   color: string | null
-  note_id: string
   created_at: string
 }
 
@@ -53,7 +52,6 @@ export function useFolders() {
           id: payload.id,
           name: payload.name,
           color: payload.color,
-          note_id: payload.note_id ?? "",
           created_at: payload.created_at || new Date().toISOString(),
         }, ...prev]
         return next

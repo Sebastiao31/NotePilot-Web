@@ -20,6 +20,9 @@ import {DeleteDialog} from "./dialogs/delete"
 import { CreateFolderBtn } from './create-folder-btn'
 import { ScrollArea } from './ui/scroll-area'
 import { useFolders } from '@/hooks/use-folders'
+import { useAuth } from '@clerk/nextjs'
+import { createSupabaseClientBrowserAuthed } from '@/lib/supabase-browser'
+import { emitNotesUpdate } from '@/lib/events'
 
 
 
@@ -27,6 +30,24 @@ export function NoteOptions({ noteId }: { noteId: string }) {
     const [deleteOpen, setDeleteOpen] = useState(false)
     const router = useRouter()
     const { folders } = useFolders()
+    const { getToken } = useAuth()
+
+    async function handleMoveTo(folderId: string) {
+      try {
+        const token = await getToken({ template: 'supabase' })
+        if (!token) return
+        const supabase = createSupabaseClientBrowserAuthed(token)
+        try { (supabase as any).realtime.setAuth(token) } catch {}
+        const { error } = await supabase.from('notes').update({ folder_id: folderId }).eq('id', noteId)
+        if (!error) {
+          emitNotesUpdate({ id: noteId, updated_at: new Date().toISOString() } as any)
+          // also include folder_id to update list optimistically
+          emitNotesUpdate({ id: noteId, folder_id: folderId, updated_at: new Date().toISOString() } as any)
+        }
+      } catch {
+        // ignore for now
+      }
+    }
 
     return (
 <>
@@ -53,8 +74,8 @@ export function NoteOptions({ noteId }: { noteId: string }) {
                     <DropdownMenuSubContent>
                         <DropdownMenuGroup className="max-h-[180px] overflow-y-auto ">
                             <ScrollArea>
-                            {folders.map((f) => (
-                              <DropdownMenuItem key={f.id}>
+                              {folders.map((f) => (
+                               <DropdownMenuItem key={f.id} onClick={() => handleMoveTo(f.id)}>
                                 <IconFolder className="size-4" style={{ color: f.color || undefined }} />
                                 {f.name}
                               </DropdownMenuItem>
