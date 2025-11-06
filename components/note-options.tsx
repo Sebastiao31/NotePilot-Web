@@ -1,8 +1,10 @@
 "use client"
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuPortal,
@@ -13,13 +15,18 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
 import { Button } from './ui/button'
-import { IconDots, IconDotsVertical, IconEdit, IconFolderUp, IconForms, IconTrash } from '@tabler/icons-react'
+import { IconDots, IconDotsVertical, IconEdit, IconFolder, IconFolderUp, IconForms, IconTrash } from '@tabler/icons-react'
 import {DeleteDialog} from "./dialogs/delete"
+import { CreateFolderBtn } from './create-folder-btn'
+import { ScrollArea } from './ui/scroll-area'
+import { useFolders } from '@/hooks/use-folders'
 
 
 
 export function NoteOptions({ noteId }: { noteId: string }) {
     const [deleteOpen, setDeleteOpen] = useState(false)
+    const router = useRouter()
+    const { folders } = useFolders()
 
     return (
 <>
@@ -33,7 +40,7 @@ export function NoteOptions({ noteId }: { noteId: string }) {
                 <DropdownMenuLabel>
                     Options
                 </DropdownMenuLabel>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push(`/notes/${noteId}?rename=1`)}>
                     <IconForms className="size-4" />
                     Change name
                 </DropdownMenuItem>
@@ -44,12 +51,19 @@ export function NoteOptions({ noteId }: { noteId: string }) {
                         Move To
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
-                        <DropdownMenuItem>
-                            Folder 1
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            Folder 2
-                        </DropdownMenuItem>
+                        <DropdownMenuGroup className="max-h-[180px] overflow-y-auto ">
+                            <ScrollArea>
+                            {folders.map((f) => (
+                              <DropdownMenuItem key={f.id}>
+                                <IconFolder className="size-4" style={{ color: f.color || undefined }} />
+                                {f.name}
+                              </DropdownMenuItem>
+                            ))}
+                            </ScrollArea>
+                        </DropdownMenuGroup>
+
+                        <DropdownMenuSeparator className="mt-0"/>
+                            <CreateFolderBtn noteId={noteId} />
                     </DropdownMenuSubContent>
                 </DropdownMenuSub>
 

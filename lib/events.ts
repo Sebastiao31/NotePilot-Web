@@ -7,6 +7,14 @@ export type NotesInsertEvent = {
   updated_at?: string
 }
 
+export type FoldersInsertEvent = {
+  id: string
+  name: string
+  color: string | null
+  note_id: string | null
+  created_at?: string
+}
+
 const bus: EventTarget = ((): EventTarget => {
   if (typeof window !== "undefined") {
     // @ts-ignore
@@ -45,6 +53,16 @@ export function onNotesDelete(handler: (payload: { id: string }) => void) {
   const listener = (e: Event) => handler((e as CustomEvent).detail)
   bus.addEventListener("notes:delete", listener)
   return () => bus.removeEventListener("notes:delete", listener)
+}
+
+export function emitFoldersInsert(payload: FoldersInsertEvent) {
+  bus.dispatchEvent(new CustomEvent("folders:insert", { detail: payload }))
+}
+
+export function onFoldersInsert(handler: (payload: FoldersInsertEvent) => void) {
+  const listener = (e: Event) => handler((e as CustomEvent).detail)
+  bus.addEventListener("folders:insert", listener)
+  return () => bus.removeEventListener("folders:insert", listener)
 }
 
 

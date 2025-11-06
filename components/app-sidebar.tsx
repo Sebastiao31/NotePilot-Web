@@ -85,18 +85,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-4">
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="w-fit">
-              <a href="#" className="group-data-[state=collapsed]:hidden">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Image src="/Logo-light.svg" alt="logo" width={24} height={24} />
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg group-data-[state=collapsed]:hidden">
+                  <Image src="/Logo-light.svg" alt="logo" width={16} height={16} />
                 </div>
 
                 
                 
-              </a>
-            </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarTrigger />
           </div>

@@ -32,11 +32,12 @@ import Superscript from '@tiptap/extension-superscript'
 export default function Editor({ noteId, initialContent = "" }: { noteId: string; initialContent?: string }) {
   const [updateCounter, setUpdateCounter] = useState(0)
   const { setEditor } = useEditorBridge()
-  const { editMode } = useEditMode()
+  const { editMode, setEditMode } = useEditMode()
   const [lastSavedHtml, setLastSavedHtml] = useState<string>(initialContent || "")
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [debounceTimer, setDebounceTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
+  
 
   
   
@@ -63,6 +64,7 @@ export default function Editor({ noteId, initialContent = "" }: { noteId: string
       setUpdateCounter(prev => prev + 1)
     },
   })
+  
   
   // Keep editor readonly state in sync with the header switch
   useEffect(() => {
