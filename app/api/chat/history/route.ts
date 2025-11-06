@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
     // Fetch recent messages
     const { data: history, error: msgErr } = await supabase
       .from("messages")
-      .select("id, role, content, created_at")
+      .select("id, role, content, created_at, like, dislike")
       .eq("chat_id", chatId)
       .order("created_at", { ascending: true })
       .limit(100);

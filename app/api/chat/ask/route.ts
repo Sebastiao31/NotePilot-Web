@@ -129,9 +129,16 @@ Tone and Style:
     const answer = (completion.choices?.[0]?.message?.content || "").trim();
     if (!answer) return NextResponse.json({ error: "Empty response from model" }, { status: 500 });
 
-    await supabase.from("messages").insert({ chat_id: chatId, role: "assistant", content: answer });
+    const { data: insertedAssistant, error: insertAsstErr } = await supabase
+      .from("messages")
+      .insert({ chat_id: chatId, role: "assistant", content: answer })
+      .select("id")
+      .single();
+    if (insertAsstErr || !insertedAssistant) {
+      return NextResponse.json({ error: insertAsstErr?.message || "Failed to store assistant message" }, { status: 500 });
+    }
 
-    return NextResponse.json({ chatId, answer }, { status: 200 });
+    return NextResponse.json({ chatId, answer, messageId: insertedAssistant.id }, { status: 200 });
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || "Server error" }, { status: 500 });
   }

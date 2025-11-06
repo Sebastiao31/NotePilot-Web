@@ -3,7 +3,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { useChatSidebar } from "./chat-provider"
-import { IconArrowUp, IconChevronsRight, IconClock, IconPlus, IconLoader2, IconHistory } from "@tabler/icons-react"
+import { IconArrowUp, IconChevronsRight, IconClock, IconPlus, IconLoader2, IconHistory, IconCopy, IconThumbUp, IconThumbDown, IconThumbUpFilled, IconThumbDownFilled } from "@tabler/icons-react"
 import { Button } from "./ui/button"
 import { useParams } from "next/navigation"
 
@@ -15,6 +15,9 @@ import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import rehypeKatex from "rehype-katex"
 import "katex/dist/katex.min.css"
+import { useAuth } from "@clerk/nextjs"
+import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
+
 
 export function ChatSidebar() {
   const { open, width, setWidth, minWidth, maxWidth, chatToggle } = useChatSidebar()
@@ -33,6 +36,11 @@ export function ChatSidebar() {
   const [pendingAnswer, setPendingAnswer] = React.useState<string | null>(null)
   const phaseIntervalRef = React.useRef<number | null>(null)
   const typingIntervalRef = React.useRef<number | null>(null)
+
+  const [copiedId, setCopiedId] = React.useState<string | null>(null)
+  const [likedIds, setLikedIds] = React.useState<Set<string>>(new Set())
+  const [dislikedIds, setDislikedIds] = React.useState<Set<string>>(new Set())
+  const { getToken } = useAuth()
 
   const isDraggingRef = React.useRef(false)
   const startXRef = React.useRef(0)
@@ -82,7 +90,19 @@ export function ChatSidebar() {
         const data = await res.json()
         if (!ignore) {
           setChatId(data.chatId || null)
-          setMessages(Array.isArray(data.messages) ? data.messages : [])
+          const msgs = Array.isArray(data.messages) ? data.messages : []
+          setMessages(msgs)
+          // Seed like/dislike sets for assistant messages
+          const liked = new Set<string>()
+          const disliked = new Set<string>()
+          for (const m of msgs) {
+            if (m.role === 'assistant') {
+              if ((m as any).like) liked.add(m.id)
+              if ((m as any).dislike) disliked.add(m.id)
+            }
+          }
+          setLikedIds(liked)
+          setDislikedIds(disliked)
         }
       } catch {}
       finally {
@@ -105,10 +125,41 @@ export function ChatSidebar() {
       if (res.ok) {
         const data = await res.json()
         if (data.chatId && !chatId) setChatId(data.chatId)
-        if (data.answer) setMessages((prev) => [...prev, { id: `a_${Date.now()}`, role: 'assistant', content: data.answer }])
+        if (data.answer) setMessages((prev) => [...prev, { id: data.messageId || `a_${Date.now()}`, role: 'assistant', content: data.answer }])
       }
     } catch {}
     finally { setLoading(false) }
+  }
+
+  async function handleCopy(content: string, id: string) {
+    try {
+      await navigator.clipboard.writeText(content)
+      setCopiedId(id)
+      window.setTimeout(() => setCopiedId((prev) => (prev === id ? null : prev)), 1500)
+    } catch {}
+  }
+
+  async function handleRate(id: string, action: 'like' | 'dislike') {
+    try {
+      const token = await getToken({ template: 'supabase' })
+      if (!token) return
+      const supabase = createSupabaseClientBrowserAuthed(token)
+      try { (supabase as any).realtime.setAuth(token) } catch {}
+
+      const updates: any = { like: action === 'like', dislike: action === 'dislike' }
+      await supabase.from('messages').update(updates).eq('id', id)
+
+      setLikedIds((prev) => {
+        const next = new Set(prev)
+        if (action === 'like') next.add(id); else next.delete(id)
+        return next
+      })
+      setDislikedIds((prev) => {
+        const next = new Set(prev)
+        if (action === 'dislike') next.add(id); else next.delete(id)
+        return next
+      })
+    } catch {}
   }
 
 
@@ -180,6 +231,7 @@ export function ChatSidebar() {
                     {isUser ? (
                       <>{m.content}</>
                     ) : (
+                      <div>
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm as any, remarkMath as any]}
                         rehypePlugins={[rehypeKatex as any]}
@@ -218,8 +270,52 @@ export function ChatSidebar() {
                       >
                         {m.content}
                       </ReactMarkdown>
+                      <span>
+                      <Tooltip open={copiedId === m.id ? true : undefined}>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="icon-sm" onClick={() => handleCopy(m.content, m.id)}>
+                            <IconCopy className="size-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{copiedId === m.id ? "Copied!" : "Copy"}</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="icon-sm" onClick={() => handleRate(m.id, 'like')} data-state={likedIds.has(m.id) ? 'on' : undefined}>
+                            {likedIds.has(m.id) ? (
+                              <IconThumbUpFilled className="size-4" />
+                            ) : (
+                              <IconThumbUp className="size-4" />
+                            )}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Like response</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="icon-sm" onClick={() => handleRate(m.id, 'dislike')} data-state={dislikedIds.has(m.id) ? 'on' : undefined}>
+                            {dislikedIds.has(m.id) ? (
+                              <IconThumbDownFilled className="size-4" />
+                            ) : (
+                              <IconThumbDown className="size-4" />
+                            )}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Dislike response</p>
+                        </TooltipContent>
+                      </Tooltip>
+                      </span>
+                      </div>
                     )}
                   </div>
+                 
                 </div>
               )
             })}
