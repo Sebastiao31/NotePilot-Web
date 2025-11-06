@@ -9,6 +9,12 @@ import { useParams } from "next/navigation"
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 import { ChatInput } from "./chat-input"
+import { ScrollArea } from "./ui/scroll-area"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import remarkMath from "remark-math"
+import rehypeKatex from "rehype-katex"
+import "katex/dist/katex.min.css"
 
 export function ChatSidebar() {
   const { open, width, setWidth, minWidth, maxWidth, chatToggle } = useChatSidebar()
@@ -20,6 +26,7 @@ export function ChatSidebar() {
   const [messages, setMessages] = React.useState<Message[]>([])
   const [input, setInput] = React.useState("")
   const [loading, setLoading] = React.useState(false)
+  const [historyLoading, setHistoryLoading] = React.useState(true)
   const [chatId, setChatId] = React.useState<string | null>(null)
   const [suggestions, setSuggestions] = React.useState<string[] | null>(null)
   const [assistantDraft, setAssistantDraft] = React.useState<{ text: string; phase: number; active: boolean } | null>(null)
@@ -63,6 +70,54 @@ export function ChatSidebar() {
     }
   }, [onPointerMove, endDrag])
 
+  // Load chat history for current note
+  React.useEffect(() => {
+    let ignore = false
+    async function load() {
+      if (!noteId) return
+      try {
+        setHistoryLoading(true)
+        const res = await fetch(`/api/chat/history?noteId=${noteId}`, { cache: 'no-store' })
+        if (!res.ok) return
+        const data = await res.json()
+        if (!ignore) {
+          setChatId(data.chatId || null)
+          setMessages(Array.isArray(data.messages) ? data.messages : [])
+        }
+      } catch {}
+      finally {
+        if (!ignore) setHistoryLoading(false)
+      }
+    }
+    load()
+    return () => { ignore = true }
+  }, [noteId])
+
+  async function handleSend() {
+    const text = input.trim()
+    if (!text || !noteId || loading) return
+    setLoading(true)
+    const localId = `u_${Date.now()}`
+    setMessages((prev) => [...prev, { id: localId, role: 'user', content: text }])
+    setInput("")
+    try {
+      const res = await fetch('/api/chat/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ noteId, message: text }) })
+      if (res.ok) {
+        const data = await res.json()
+        if (data.chatId && !chatId) setChatId(data.chatId)
+        if (data.answer) setMessages((prev) => [...prev, { id: `a_${Date.now()}`, role: 'assistant', content: data.answer }])
+      }
+    } catch {}
+    finally { setLoading(false) }
+  }
+
+
+  const scrollRef = React.useRef<HTMLDivElement | null>(null)
+  React.useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
+    }
+  }, [messages, loading])
 
   return (
     <div
@@ -101,8 +156,88 @@ export function ChatSidebar() {
           </div>
         </div>
 
-        <div className="p-4 mt-auto">
-            <ChatInput />
+        <div className="flex-1 overflow-y-auto px-4" ref={scrollRef}>
+        <ScrollArea>
+          <div className="space-y-6 pt-6 pb-12">
+            {historyLoading && messages.length === 0 ? (
+              <div className="h-full flex items-center justify-center py-8">
+                <IconLoader2 className="size-5 animate-spin text-muted-foreground" />
+              </div>
+            ) : null}
+            
+            {messages.map((m) => {
+              const isUser = m.role === 'user'
+              return (
+                <div key={m.id} className={cn("flex w-full", isUser ? "justify-end" : "justify-start")}> 
+                  <div
+                    className={cn(
+                      "w-fit max-w-[680px] rounded-2xl px-3 py-2 text-sm break-words leading-7",
+                      isUser
+                        ? "bg-muted rounded-tr-sm"
+                        : "text-foreground rounded-tl-sm "
+                    )}
+                  >
+                    {isUser ? (
+                      <>{m.content}</>
+                    ) : (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm as any, remarkMath as any]}
+                        rehypePlugins={[rehypeKatex as any]}
+                        components={{
+                          h1: (props) => <h3 className="text-base font-semibold mb-2" {...props} />,
+                          h2: (props) => <h4 className="text-sm font-semibold mt-6" {...props} />,
+                          h3: (props) => <h5 className="text-sm font-semibold mt-6" {...props} />,
+                          p: (props) => <p  {...props} />,
+                          ul: (props) => <ul className="list-disc pl-5 my-2 space-y-1" {...props} />,
+                          ol: (props) => <ol className="list-decimal pl-5 my-2 space-y-1" {...props} />,
+                          li: (props) => <li className="leading-7" {...props} />,
+                          a: (props) => <a className="underline underline-offset-2 hover:opacity-90" target="_blank" rel="noreferrer" {...props} />,
+                          blockquote: (props) => <blockquote className="border-l-2 pl-3 italic my-2" {...props} />,
+                          hr: () => <hr className="my-4 border-t " />,
+                          table: (props) => <table className="w-full border-collapse text-sm my-2" {...props} />,
+                          thead: (props) => <thead className="bg-accent/40" {...props} />,
+                          th: (props) => <th className="border px-2 py-1 text-left font-medium" {...props} />,
+                          td: (props) => <td className="border px-2 py-1 align-top" {...props} />,
+                          img: (props) => <img className="rounded-md max-w-full" {...props} />,
+                          code(props) {
+                            const { inline, className, children, ...rest } = props as any
+                            if (inline) {
+                              return (
+                                <code className={cn("bg-muted px-1 py-0.5 rounded", className)} {...rest}>
+                                  {children}
+                                </code>
+                              )
+                            }
+                            return (
+                              <pre className="bg-muted p-3 rounded-md overflow-x-auto">
+                                <code className={className} {...rest}>{children}</code>
+                              </pre>
+                            )
+                          },
+                        }}
+                      >
+                        {m.content}
+                      </ReactMarkdown>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+            
+            {loading ? (
+              <div className="flex justify-start">
+                <div className="rounded-2xl rounded-tl-sm px-3 py-2 text-xs text-muted-foreground flex items-center gap-2">
+                  <IconLoader2 className="size-4 animate-spin" />
+                  Thinking…
+                </div>
+              </div>
+            ) : null}
+          </div>
+          </ScrollArea>
+        </div>
+
+        <div className="pb-4 px-4 mt-auto">
+            <ChatInput value={input} onChange={setInput} onSend={handleSend} loading={loading} />
         </div>
       </div>
     </div>

@@ -22,14 +22,14 @@ export function NoteSidebar() {
   return (
     <div
       className={cn(
-        "fixed inset-y-0 z-40 border-r bg-background transition-[transform,left] duration-300 ease-in-out left-0"
+        "fixed inset-y-0 z-40 border-r bg-background transition-[transform,left] duration-300 ease-in-out left-0 "
       )}
       style={{ width, transform, pointerEvents: open ? "auto" : "none", left: leftOffset }}
       hidden={!open}
       aria-hidden={!open}
     >
       <div className="flex h-full flex-col">
-        <div className="p-3 px-4 flex items-center gap-4 justify-between">
+        <div className="p-3 px-4 flex items-center gap-4 justify-between ">
 
             <NoteFilter />
           
@@ -43,9 +43,9 @@ export function NoteSidebar() {
         </div>
         <div className="flex-1 overflow-y-auto p-3 ">
           
-          <div>
+          <div className="h-full">
             <NoteList />
-        </div>
+          </div>
         </div>
 
         

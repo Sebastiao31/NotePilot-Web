@@ -21,12 +21,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-export function ChatInput() {
+export function ChatInput({ value, onChange, onSend, loading }: { value: string; onChange: (v: string) => void; onSend: () => void; loading?: boolean }) {
     return (
       <div className="grid w-full gap-6">
         
         <InputGroup >
-          <InputGroupTextarea placeholder="Ask about this note..."  />
+          <InputGroupTextarea placeholder="Ask about this note..." value={value} onChange={(e) => onChange(e.target.value)} disabled={loading} />
           <InputGroupAddon align="block-end" className="justify-between">
             <InputGroupButton
               variant="outline"
@@ -40,6 +40,8 @@ export function ChatInput() {
               variant="default"
               className="rounded-full"
               size="icon-xs"
+              disabled={loading || !value.trim()}
+              onClick={onSend}
             >
               <ArrowUpIcon className="text-white"/>
               <span className="sr-only">Send</span>

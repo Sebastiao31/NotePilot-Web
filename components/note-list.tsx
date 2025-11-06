@@ -5,6 +5,7 @@ import NoteItem from "./note-item"
 import { useAuth } from "@clerk/nextjs"
 import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
 import { onNotesInsert, onNotesUpdate, onNotesDelete, onFolderFilterChange, onNotesSearchChange } from "@/lib/events"
+import Image from "next/image"
 
 type NoteListItem = {
   id: string
@@ -191,7 +192,13 @@ export function NoteList() {
   }
 
   if (!notes.length) {
-    return <div className="text-sm text-muted-foreground">No notes yet</div>
+    return <div className="text-sm text-muted-foreground  h-full flex items-center justify-center">
+      {/* Light mode logo */}
+      <Image src="/LogoMuted.svg" alt="logo" width={100} height={100} className="dark:hidden mb-16" />
+      {/* Dark mode logo */}
+      <Image src="/LogoMutedDark.svg" alt="logo" width={100} height={100} className="hidden dark:block mb-16" />
+
+    </div>
   }
 
   const visibleNotesFolder = filterFolderId === "all"

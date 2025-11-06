@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     - StarterKit (p, h1, h2, h3, ul, ol, li, blockquote, code, strong, em, underline, strike)
     - Highlight
     - TableKit (table, tr, td, th)
-    - Math (inline math, block math)
+    - Math (inline math (<span data-type="inline-math" data-latex="..."></span>), block math (<div data-type="block-math" data-latex="..."></div>))
     - Subscript (a<sub>b</sub>)
     - Superscript (a<sup>b</sup>)
 
@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
     - When writing lists, use <ul> and <li> tags. When writing numbered lists, use <ol> and <li> tags.
     - Always use <blockquote> tags when citing quotes.
     - Always when writing mathematical or chemical expressions, use the correct syntax:
+        - NEVER write inline math expression like f(x), f(x) = x^2, [a.b], etc, has if they were inline code (<code>...</code>), use the correct inline math syntax instead <span data-type="inline-math" data-latex="..."></span>.
         - For inline math or chemical expressions, use the <span data-type="inline-math" data-latex="..."></span> syntax.
         - For block math or chemical expressions, use the <div data-type="block-math" data-latex="..."></div> syntax.
         - For chemical expressions, use correctly the <sub> and <sup> tags.

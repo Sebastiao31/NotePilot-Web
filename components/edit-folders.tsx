@@ -185,7 +185,7 @@ export function EditFolders({ selectedFolderId = "all", className }: EditFolders
 
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="destructive" size="icon" disabled={deletingId === f.id}>
+                            <Button variant="outline" size="icon" className="hover:bg-destructive/10 disabled:hover:bg-transparent text-destructive hover:text-destructive hover:border-destructive" disabled={deletingId === f.id}>
                               <IconTrash className="size-4" />
                             </Button>
                           </AlertDialogTrigger>
