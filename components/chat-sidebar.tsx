@@ -17,6 +17,8 @@ import rehypeKatex from "rehype-katex"
 import "katex/dist/katex.min.css"
 import { useAuth } from "@clerk/nextjs"
 import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
+import { AllChats } from "./all-chats"
+import { NewChats } from "./new-chats"
 
 
 export function ChatSidebar() {
@@ -78,15 +80,38 @@ export function ChatSidebar() {
     }
   }, [onPointerMove, endDrag])
 
-  // Load chat history for current note
+  // When switching to a different note, reset chat state immediately to avoid showing stale chats
+  React.useEffect(() => {
+    setMessages([])
+    setLikedIds(new Set())
+    setDislikedIds(new Set())
+    setCopiedId(null)
+    // let history loader select or create latest chat for the new note
+    setChatId(null)
+  }, [noteId])
+
+  // Load chat history for current note / selected chat
   React.useEffect(() => {
     let ignore = false
     async function load() {
       if (!noteId) return
       try {
         setHistoryLoading(true)
-        const res = await fetch(`/api/chat/history?noteId=${noteId}`, { cache: 'no-store' })
-        if (!res.ok) return
+        const qs = new URLSearchParams({ noteId })
+        if (chatId) qs.set('chatId', chatId)
+        let res = await fetch(`/api/chat/history?${qs.toString()}`, { cache: 'no-store' })
+        if (!res.ok) {
+          // Fallback: try without chatId (e.g., stale chatId from another note)
+          res = await fetch(`/api/chat/history?noteId=${encodeURIComponent(noteId)}`, { cache: 'no-store' })
+        }
+        if (!res.ok) {
+          if (!ignore) {
+            setMessages([])
+            setLikedIds(new Set())
+            setDislikedIds(new Set())
+          }
+          return
+        }
         const data = await res.json()
         if (!ignore) {
           setChatId(data.chatId || null)
@@ -111,7 +136,7 @@ export function ChatSidebar() {
     }
     load()
     return () => { ignore = true }
-  }, [noteId])
+    }, [noteId, chatId])
 
   async function handleSend() {
     const text = input.trim()
@@ -195,13 +220,9 @@ export function ChatSidebar() {
           <div className="flex items-center gap-2 ml-auto">
             
 
-            <Button variant="ghost" size="icon" onClick={chatToggle} className="size-7 ">
-                <IconHistory className="text-accent-foreground" />
-            </Button>
+                 <AllChats noteId={noteId} onSelect={(id) => { setMessages([]); setLikedIds(new Set()); setDislikedIds(new Set()); setHistoryLoading(true); setChatId(id) }} />
 
-            <Button variant="ghost" size="icon" onClick={chatToggle} className="size-7 ">
-                <IconPlus className="text-accent-foreground" />
-            </Button>
+             <NewChats noteId={noteId} onCreated={(id) => { setMessages([]); setLikedIds(new Set()); setDislikedIds(new Set()); setHistoryLoading(true); setChatId(id) }} />
 
 
           </div>
@@ -251,6 +272,7 @@ export function ChatSidebar() {
                           th: (props) => <th className="border px-2 py-1 text-left font-medium" {...props} />,
                           td: (props) => <td className="border px-2 py-1 align-top" {...props} />,
                           img: (props) => <img className="rounded-md max-w-full" {...props} />,
+                          
                           code(props) {
                             const { inline, className, children, ...rest } = props as any
                             if (inline) {

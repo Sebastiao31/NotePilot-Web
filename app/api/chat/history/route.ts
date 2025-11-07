@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const noteId = req.nextUrl.searchParams.get("noteId");
+    const forcedChatId = req.nextUrl.searchParams.get("chatId");
     if (!noteId) return NextResponse.json({ error: "noteId is required" }, { status: 400 });
 
     const supabase = await createSupabaseClient();
@@ -21,26 +22,38 @@ export async function GET(req: NextRequest) {
     if (noteErr || !note) return NextResponse.json({ error: noteErr?.message || "Note not found" }, { status: 404 });
     if (note.user_id !== userId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    // Get or create chat for this note
-    const { data: existingChats, error: chatErr } = await supabase
-      .from("chats")
-      .select("id")
-      .eq("note_id", noteId)
-      .order("created_at", { ascending: false })
-      .limit(1);
-    if (chatErr) return NextResponse.json({ error: chatErr.message }, { status: 500 });
-
     let chatId: string;
-    if (existingChats && existingChats.length) {
-      chatId = existingChats[0].id as string;
-    } else {
-      const { data: created, error: createErr } = await supabase
+    if (forcedChatId) {
+      // Verify the provided chat belongs to this user via note ownership
+      const { data: owned, error: ownErr } = await supabase
         .from("chats")
-        .insert({ note_id: noteId, suggestions: null })
-        .select("id")
+        .select("id, note_id")
+        .eq("id", forcedChatId)
         .single();
-      if (createErr || !created) return NextResponse.json({ error: createErr?.message || "Failed to create chat" }, { status: 500 });
-      chatId = created.id as string;
+      if (ownErr || !owned) return NextResponse.json({ error: ownErr?.message || "Chat not found" }, { status: 404 });
+      if (owned.note_id !== noteId) return NextResponse.json({ error: "Chat does not belong to this note" }, { status: 403 });
+      chatId = owned.id as string;
+    } else {
+      // Get or create latest chat for this note
+      const { data: existingChats, error: chatErr } = await supabase
+        .from("chats")
+        .select("id")
+        .eq("note_id", noteId)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (chatErr) return NextResponse.json({ error: chatErr.message }, { status: 500 });
+
+      if (existingChats && existingChats.length) {
+        chatId = existingChats[0].id as string;
+      } else {
+        const { data: created, error: createErr } = await supabase
+          .from("chats")
+          .insert({ note_id: noteId, suggestions: null })
+          .select("id")
+          .single();
+        if (createErr || !created) return NextResponse.json({ error: createErr?.message || "Failed to create chat" }, { status: 500 });
+        chatId = created.id as string;
+      }
     }
 
     // Fetch recent messages
