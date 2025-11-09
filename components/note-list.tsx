@@ -6,6 +6,16 @@ import { useAuth } from "@clerk/nextjs"
 import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
 import { onNotesInsert, onNotesUpdate, onNotesDelete, onFolderFilterChange, onNotesSearchChange } from "@/lib/events"
 import Image from "next/image"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
+import { IconFiles } from "@tabler/icons-react"
+
 
 type NoteListItem = {
   id: string
@@ -192,13 +202,20 @@ export function NoteList() {
   }
 
   if (!notes.length) {
-    return <div className="text-sm text-muted-foreground  h-full flex items-center justify-center">
-      {/* Light mode logo */}
-      <Image src="/LogoMuted.svg" alt="logo" width={100} height={100} className="dark:hidden mb-16" />
-      {/* Dark mode logo */}
-      <Image src="/LogoMutedDark.svg" alt="logo" width={100} height={100} className="hidden dark:block mb-16" />
-
-    </div>
+    return(
+      <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <IconFiles />
+        </EmptyMedia>
+        <EmptyTitle>No Notes Found</EmptyTitle>
+        <EmptyDescription>
+          Well this is awkward... We haven't found any notes. Try creating a new one.
+        </EmptyDescription>
+      </EmptyHeader>
+      
+    </Empty>
+    )
   }
 
   const visibleNotesFolder = filterFolderId === "all"
@@ -210,7 +227,7 @@ export function NoteList() {
     : visibleNotesFolder
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       {visibleNotes.map((n) => (
         <NoteItem key={n.id} note={n} />
       ))}

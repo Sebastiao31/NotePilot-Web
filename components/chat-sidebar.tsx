@@ -346,7 +346,7 @@ export function ChatSidebar() {
               <div className="flex justify-start">
                 <div className="rounded-2xl rounded-tl-sm px-3 py-2 text-xs text-muted-foreground flex items-center gap-2">
                   <IconLoader2 className="size-4 animate-spin" />
-                  Thinking…
+                  <span className="animate-pulse">Thinking…</span>
                 </div>
               </div>
             ) : null}

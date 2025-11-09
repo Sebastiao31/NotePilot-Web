@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <SidebarInset>
           <NoteInset>
           <ChatInset>
-            <SiteHeader />
+            
             {children}
           </ChatInset>
           </NoteInset>

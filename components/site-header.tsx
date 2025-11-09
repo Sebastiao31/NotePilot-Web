@@ -7,6 +7,9 @@ import { BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, Br
 import { Button } from './ui/button'
 import { Switch } from "@/components/ui/switch"
 import { useEditMode } from '@/components/edit-mode-provider'
+import { usePathname } from 'next/navigation'
+import { useAuth } from '@clerk/nextjs'
+import { createSupabaseClientBrowserAuthed } from '@/lib/supabase-browser'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +28,44 @@ import { IconFileUploadFilled } from '@tabler/icons-react'
 
 export function SiteHeader() {
     const { editMode, setEditMode } = useEditMode()
+    const pathname = usePathname()
+    const { getToken } = useAuth()
+    const [noteTitle, setNoteTitle] = React.useState<string | null>(null)
+
+    const noteId = React.useMemo(() => {
+      if (!pathname) return null
+      const parts = pathname.split('/').filter(Boolean)
+      // Expecting /notes or /notes/[id]
+      if (parts[0] !== 'notes') return null
+      return parts[1] || null
+    }, [pathname])
+
+    React.useEffect(() => {
+      let cancelled = false
+      async function loadTitle() {
+        if (!noteId) {
+          setNoteTitle(null)
+          return
+        }
+        try {
+          const token = await getToken({ template: "supabase" })
+          if (!token) return
+          const supabase = createSupabaseClientBrowserAuthed(token)
+          const { data, error } = await supabase
+            .from('notes')
+            .select('title')
+            .eq('id', noteId)
+            .single()
+          if (error) return
+          if (!cancelled) setNoteTitle(data?.title ?? null)
+        } catch {
+          // ignore errors; breadcrumb will just show "Notes"
+        }
+      }
+      loadTitle()
+      return () => { cancelled = true }
+    }, [noteId, getToken])
+
     return (
         <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 justify-between pr-2 border-b bg-background w-full">
           <div className="flex items-center gap-2 px-4">
@@ -33,7 +74,21 @@ export function SiteHeader() {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4 md:hidden"
             />
-            <span className="text-sm font-medium">Notes</span>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/notes">Notes</BreadcrumbLink>
+                </BreadcrumbItem>
+                {noteId && noteTitle ? (
+                  <>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>{noteTitle}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </>
+                ) : null}
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">

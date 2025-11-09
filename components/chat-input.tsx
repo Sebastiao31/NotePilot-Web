@@ -20,21 +20,27 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { AiTools } from "./ai-tools"
 
 export function ChatInput({ value, onChange, onSend, loading }: { value: string; onChange: (v: string) => void; onSend: () => void; loading?: boolean }) {
     return (
       <div className="grid w-full gap-6">
         
         <InputGroup >
-          <InputGroupTextarea placeholder="Ask about this note..." value={value} onChange={(e) => onChange(e.target.value)} disabled={loading} />
+          <InputGroupTextarea
+            placeholder="Ask about this note..."
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                if (!loading && value.trim()) onSend()
+              }
+            }}
+            disabled={loading}
+          />
           <InputGroupAddon align="block-end" className="justify-between">
-            <InputGroupButton
-              variant="outline"
-              className="rounded-full"
-              size="icon-xs"
-            >
-              <IconPlus />
-            </InputGroupButton>
+            <AiTools />  
             
             <InputGroupButton
               variant="default"

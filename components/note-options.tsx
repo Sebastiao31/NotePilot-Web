@@ -73,7 +73,7 @@ export function NoteOptions({ noteId, folderId }: { noteId: string; folderId?: s
                     <IconDotsVertical className="size-4" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align="end">
                 <DropdownMenuLabel>
                     Options
                 </DropdownMenuLabel>
