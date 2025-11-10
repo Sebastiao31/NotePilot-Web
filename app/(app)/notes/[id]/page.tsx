@@ -12,7 +12,7 @@ export default async function NoteIdPage({ params }: { params: { id: string } })
   const initialContent = note?.summary || ''
 
   return (
-    <div className="max-w-3xl mx-auto h-full pt-18 pb-36 px-6">
+    <div className="max-w-3xl mx-auto h-full pt-18 pb-36 px-10">
       <Editor noteId={params.id} initialContent={initialContent} />
     </div>
   )

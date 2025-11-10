@@ -25,7 +25,7 @@ export function NoteFilter() {
 
     return (
         <Select defaultValue="all" onValueChange={(val) => { setSelectedFolderId(val); emitFolderFilterChange(val) }}>
-      <SelectTrigger className="shadow-none max-w-[200px]">
+      <SelectTrigger className="shadow-none border-none max-w-[200px]">
         <SelectValue className="truncate" placeholder="Select a folder" />
       </SelectTrigger>
       <SelectContent align="start" >

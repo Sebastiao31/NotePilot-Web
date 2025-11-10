@@ -8,6 +8,7 @@ create table public.quizzes (
   content    jsonb not null,          -- full quiz payload (questions, answers, tips, etc.)
   status     varchar default 'generated',
   created_at timestamptz default now()
+  title varchar,
 );
 
 -- Index to speed lookups by note and time

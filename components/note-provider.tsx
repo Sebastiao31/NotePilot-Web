@@ -29,7 +29,7 @@ export function useNoteSidebar() {
 export function NoteProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
   const toggle = React.useCallback(() => setOpen((v) => !v), [])
-  const defaultWidth = 350
+  const defaultWidth = 320
   const minWidth = defaultWidth
   const maxWidth = defaultWidth
   const [width] = React.useState<number>(defaultWidth)

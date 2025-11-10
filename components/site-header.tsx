@@ -35,10 +35,31 @@ export function SiteHeader() {
     const noteId = React.useMemo(() => {
       if (!pathname) return null
       const parts = pathname.split('/').filter(Boolean)
-      // Expecting /notes or /notes/[id]
+      // Expecting /notes or /notes/[id] or /notes/[id]/section
       if (parts[0] !== 'notes') return null
       return parts[1] || null
     }, [pathname])
+
+    const section = React.useMemo(() => {
+      if (!pathname) return null
+      const parts = pathname.split('/').filter(Boolean)
+      if (parts[0] !== 'notes') return null
+      return parts[2] || null
+    }, [pathname])
+
+    const sectionLabel = React.useMemo(() => {
+      if (!section) return null
+      switch (section) {
+        case 'quiz':
+          return 'Quiz'
+        case 'flashcards':
+          return 'Flashcards'
+        case 'mindmap':
+          return 'Mindmap'
+        default:
+          return null
+      }
+    }, [section])
 
     React.useEffect(() => {
       let cancelled = false
@@ -74,22 +95,11 @@ export function SiteHeader() {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4 md:hidden"
             />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/notes">Notes</BreadcrumbLink>
-                </BreadcrumbItem>
-                {noteId && noteTitle ? (
-                  <>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>{noteTitle}</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </>
-                ) : null}
-              </BreadcrumbList>
-            </Breadcrumb>
+            <span className="text-sm font-medium">
+              {noteTitle}
+            </span>
           </div>
+          {noteId && !section ? (
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">
@@ -117,6 +127,7 @@ export function SiteHeader() {
               </DropdownMenu>
             </div>
           </div>
+          ) : null}
         </header>
         
     )

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { usePathname } from "next/navigation"
 
 type ChatSidebarContextValue = {
   open: boolean
@@ -47,10 +48,19 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     } catch {}
   }, [clamp])
 
-  // Do not persist open/close across pages: always start closed, SiteHeader will control per-route default
-  React.useEffect(() => {
-    setOpen(false)
-  }, [])
+	// Auto-open/close only on route transitions into/out of /notes/[id]
+	const pathname = usePathname()
+	React.useEffect(() => {
+		if (!pathname) return
+		const inNoteContext = /^\/notes\/[^/]+(\/.*)?$/.test(pathname)
+		// On initial mount, open if already in note context; otherwise closed
+		// On subsequent path changes, open when entering note, close when leaving
+		setOpen((prev) => {
+			if (inNoteContext && !prev) return true
+			if (!inNoteContext && prev) return false
+			return prev
+		})
+	}, [pathname])
 
   const setWidth = React.useCallback((value: number | ((w: number) => number)) => {
     _setWidth((prev) => {

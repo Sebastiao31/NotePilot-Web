@@ -36,7 +36,7 @@ export function NoteItem({ note, className }: { note: NoteListItem; className?: 
         <span className="ml-2 text-xs text-muted-foreground animate-pulse">Generating…</span>
       </span>
     ) : (
-      <span className={cn("flex items-center w-full border justify-between gap-2 px-3 py-2 rounded-md transition-colors", isActive ? "bg-muted/70" : "hover:bg-muted/70") }>
+      <span className={cn("flex items-center w-full  justify-between gap-2 px-3 py-2 rounded-md transition-colors", isActive ? "bg-muted/70" : "hover:bg-muted/70") }>
       <Link 
       href={`/notes/${note.id}`}
       className={cn(

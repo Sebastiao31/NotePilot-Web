@@ -10,24 +10,29 @@ import { ChatInset } from '@/components/chat-inset'
 import { ChatSidebar } from '@/components/chat-sidebar'
 import { EditModeProvider } from '@/components/edit-mode-provider'
 
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <SidebarProvider>
+    <SidebarProvider open={false} >
       <EditModeProvider>
         <ChatProvider>
-        <NoteProvider>
+       
+          <NoteProvider>
           <AppSidebar />
           <SidebarInset>
-          <NoteInset>
           <ChatInset>
-            
-            {children}
-          </ChatInset>
+          <NoteInset>
+          
+              {children}
+          
           </NoteInset>
+          </ChatInset>
           </SidebarInset>
-          <NoteSidebar />
           <ChatSidebar />
-        </NoteProvider>
+          <NoteSidebar />
+      
+          </NoteProvider>
+      
         </ChatProvider>
       </EditModeProvider>
     </SidebarProvider>

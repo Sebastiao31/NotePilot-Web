@@ -87,24 +87,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <div className="flex items-center justify-between mb-4">
           <SidebarMenuItem>
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg group-data-[state=collapsed]:hidden">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg ">
                   {/* Light mode logo */}
                   <Image src="/Logo.svg" alt="logo" width={16} height={16} className="dark:hidden" />
                   {/* Dark mode logo */}
                   <Image src="/LogoDark.svg" alt="logo" width={16} height={16} className="hidden dark:block" />
                 </div>
           </SidebarMenuItem>
-          <SidebarTrigger />
           </div>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
+        <NavSecondary />
       </SidebarContent>
+      
       <SidebarFooter>
+        
         <NavUser user={data.user} />
       </SidebarFooter>
-     
     </Sidebar>
   )
 }

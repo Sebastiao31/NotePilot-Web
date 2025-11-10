@@ -1,7 +1,7 @@
 "use client"
 
-import { ChevronRight, ChevronsRight, CirclePlus, Folder, MoreHorizontal, MoreVertical, Share, Trash2, type LucideIcon } from "lucide-react"
-import { IconBrandYoutubeFilled, IconCirclePlus, IconFile, IconFileMusicFilled, IconFiles, IconFileUploadFilled, IconLetterCase, IconLetterCaseUpper, IconMessageCircle, IconMicrophoneFilled, IconPlus, IconSquareRoundedPlusFilled, IconUpload, IconWorld } from "@tabler/icons-react"
+import { ChevronRight, ChevronsRight, CirclePlus, Folder, MoreHorizontal, MoreVertical, Settings, Share, Trash2, WandSparkles, type LucideIcon } from "lucide-react"
+import { IconBrandYoutubeFilled, IconCirclePlus, IconFile, IconFileMusicFilled, IconFiles, IconFileUploadFilled, IconHome, IconLetterCase, IconLetterCaseUpper, IconMessageCircle, IconMicrophoneFilled, IconPlus, IconSquareRoundedPlusFilled, IconUpload, IconWorld } from "@tabler/icons-react"
 import {
   Collapsible,
   CollapsibleContent,
@@ -66,6 +66,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Button } from "./ui/button"
+import { House } from "lucide-react"
+import { usePathname } from "next/navigation"
+import React from "react"
+
 
 
 
@@ -87,17 +91,61 @@ export function NavMain({
   const { isMobile } = useSidebar()
   const { toggle } = useNoteSidebar()
   const { chatToggle } = useChatSidebar()
+  const pathname = usePathname()
+  const inNoteContext = React.useMemo(() => {
+    if (!pathname) return false
+    // Match /notes/[id] and any deeper children
+    return /^\/notes\/[^/]+(\/.*)?$/.test(pathname)
+  }, [pathname])
 
   return (
     <SidebarGroup>
       <SidebarMenu>
-      <CreateNoteMenu />
 
-      
-      
+        {/* 
 
-      
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip="Home" >
+              <House className="size-4" />
+              <span>Home</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         
+        
+
+        {inNoteContext && (
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip="AI Chat" onClick={chatToggle}>
+              <IconMessageCircle className="size-4" />
+              <span>AI Chat</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )}
+
+        {inNoteContext && (
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip="NotePilot Agent" onClick={toggle}>
+              <WandSparkles className="size-4" />
+              <span>NotePilot</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        )}
+
+    < SidebarMenuItem>
+          <SidebarMenuButton tooltip="Settings">
+            <Settings className="size-4" />
+            <span>Settings</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+        */}
+      
+
+      
+      
+
+      
+     
+        <CreateNoteMenu />
         <SidebarMenuItem>
           <SidebarMenuButton onClick={toggle} tooltip="Notes">
             <IconFiles className="size-4" />
@@ -105,12 +153,15 @@ export function NavMain({
           </SidebarMenuButton>
         </SidebarMenuItem>
 
-        <SidebarMenuItem>
-          <SidebarMenuButton onClick={chatToggle} tooltip="Ai Chat">
-            <IconMessageCircle className="size-4" />
-            <span>Ai Chat</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        {inNoteContext ? (
+          <SidebarMenuItem>
+            <SidebarMenuButton onClick={chatToggle} tooltip="Ai Chat">
+              <IconMessageCircle className="size-4" />
+              <span>Ai Chat</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ) : null}
+      
         
       </SidebarMenu>
     </SidebarGroup>
