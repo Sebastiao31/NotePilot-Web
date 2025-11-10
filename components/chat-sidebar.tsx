@@ -20,6 +20,7 @@ import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
 import { AllChats } from "./all-chats"
 import { NewChats } from "./new-chats"
 import { QuizDialog } from "./dialogs/quiz"
+import { FlashcardsDialog } from "./dialogs/flashcards"
 
 
 export function ChatSidebar() {
@@ -51,6 +52,13 @@ export function ChatSidebar() {
   const [quiz, setQuiz] = React.useState<any | null>(null)
   const [quizError, setQuizError] = React.useState<string | null>(null)
   const [existingQuiz, setExistingQuiz] = React.useState<any | null>(null)
+
+  // Flashcards state
+  const [fcOpen, setFcOpen] = React.useState(false)
+  const [fcLoading, setFcLoading] = React.useState(false)
+  const [flashcards, setFlashcards] = React.useState<any | null>(null)
+  const [fcError, setFcError] = React.useState<string | null>(null)
+  const [existingFlashcards, setExistingFlashcards] = React.useState<any | null>(null)
 
   const isDraggingRef = React.useRef(false)
   const startXRef = React.useRef(0)
@@ -96,14 +104,9 @@ export function ChatSidebar() {
     setCopiedId(null)
     // let history loader select or create latest chat for the new note
     setChatId(null)
-    // reset quiz state and refetch for new note
-    setQuiz(null)
-    setExistingQuiz(null)
-    setQuizError(null)
-    setQuizOpen(false)
   }, [noteId])
 
-  // Prefetch existing quiz for this note
+  // Prefetch latest existing quiz for this note (if any)
   React.useEffect(() => {
     let cancelled = false
     async function loadExisting() {
@@ -121,6 +124,17 @@ export function ChatSidebar() {
         if (error) return
         const first = Array.isArray(data) && data.length ? (data[0] as any) : null
         if (!cancelled) setExistingQuiz(first?.content ?? null)
+
+        const { data: fData, error: fErr } = await supabase
+          .from("flashcards")
+          .select("content, created_at")
+          .eq("note_id", noteId)
+          .order("created_at", { ascending: false })
+          .limit(1)
+        if (!fErr) {
+          const fFirst = Array.isArray(fData) && fData.length ? (fData[0] as any) : null
+          if (!cancelled) setExistingFlashcards(fFirst?.content ?? null)
+        }
       } catch {}
     }
     loadExisting()
@@ -193,10 +207,9 @@ export function ChatSidebar() {
     finally { setLoading(false) }
   }
 
-  async function handleGenerateQuiz(forceNew?: boolean) {
+  async function handleGenerateQuiz(forceNew: boolean = false) {
     if (!noteId || quizLoading) return
-
-    // If a quiz already exists and not forcing regeneration, open the existing one
+    // If an existing quiz is available and not explicitly forcing a regeneration, just open it
     if (!forceNew && existingQuiz) {
       setQuiz(existingQuiz)
       setQuizError(null)
@@ -204,7 +217,6 @@ export function ChatSidebar() {
       setQuizOpen(true)
       return
     }
-
     setQuizOpen(true)
     setQuizLoading(true)
     setQuiz(null)
@@ -225,7 +237,6 @@ export function ChatSidebar() {
         const data = await res.json().catch(() => null as any)
         if (data?.quiz) {
           setQuiz(data.quiz)
-          setExistingQuiz(data.quiz)
         } else {
           setQuizError('Quiz generation returned no data')
         }
@@ -234,6 +245,71 @@ export function ChatSidebar() {
       setQuizError(e?.message || 'Quiz generation error')
     } finally {
       setQuizLoading(false)
+    }
+  }
+
+  async function handleGenerateFlashcards(forceNew: boolean = false) {
+    if (!noteId || fcLoading) return
+    if (!forceNew && existingFlashcards) {
+      setFlashcards(existingFlashcards)
+      setFcError(null)
+      setFcLoading(false)
+      setFcOpen(true)
+      return
+    }
+    // If we don't have cached flashcards yet, do a quick on-demand check before generating
+    if (!forceNew && !existingFlashcards) {
+      try {
+        const token = await getToken({ template: "supabase" })
+        if (token) {
+          const supabase = createSupabaseClientBrowserAuthed(token)
+          const { data: fData } = await supabase
+            .from("flashcards")
+            .select("content, created_at")
+            .eq("note_id", noteId)
+            .order("created_at", { ascending: false })
+            .limit(1)
+          const fFirst = Array.isArray(fData) && fData.length ? (fData[0] as any) : null
+          const found = fFirst?.content ?? null
+          if (found) {
+            setExistingFlashcards(found)
+            setFlashcards(found)
+            setFcError(null)
+            setFcLoading(false)
+            setFcOpen(true)
+            return
+          }
+        }
+      } catch {}
+    }
+    setFcOpen(true)
+    setFcLoading(true)
+    setFlashcards(null)
+    setFcError(null)
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 90000)
+      const res = await fetch('/api/flashcards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ noteId }),
+        signal: controller.signal,
+      }).finally(() => clearTimeout(timeout))
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        setFcError(err?.error || res.statusText || 'Failed to generate flashcards')
+      } else {
+        const data = await res.json().catch(() => null as any)
+        if (data?.flashcards) {
+          setFlashcards(data.flashcards)
+        } else {
+          setFcError('Flashcards generation returned no data')
+        }
+      }
+    } catch (e: any) {
+      setFcError(e?.message || 'Flashcards generation error')
+    } finally {
+      setFcLoading(false)
     }
   }
 
@@ -436,7 +512,14 @@ export function ChatSidebar() {
         </div>
 
         <div className="pb-4 px-4 mt-auto">
-            <ChatInput value={input} onChange={setInput} onSend={handleSend} loading={loading} onGenerateQuiz={() => handleGenerateQuiz(false)} />
+            <ChatInput
+              value={input}
+              onChange={setInput}
+              onSend={handleSend}
+              loading={loading}
+              onGenerateQuiz={() => handleGenerateQuiz(false)}
+              onGenerateFlashcards={() => handleGenerateFlashcards(false)}
+            />
         </div>
 
         <QuizDialog
@@ -446,6 +529,15 @@ export function ChatSidebar() {
           quiz={quiz}
           error={quizError}
           onRegenerate={() => handleGenerateQuiz(true)}
+        />
+
+        <FlashcardsDialog
+          open={fcOpen}
+          onOpenChange={(o) => { if (!fcLoading) setFcOpen(o) }}
+          loading={fcLoading}
+          cards={flashcards}
+          error={fcError}
+          onRegenerate={() => handleGenerateFlashcards(true)}
         />
       </div>
     </div>

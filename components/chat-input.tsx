@@ -25,7 +25,7 @@ import { AiTools } from "./ai-tools"
 import { Button } from "@/components/ui/button"
 import { Switch } from "./ui/switch"
 
-export function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz }: { value: string; onChange: (v: string) => void; onSend: () => void; loading?: boolean; onGenerateQuiz?: () => void }) {
+export function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, onGenerateFlashcards }: { value: string; onChange: (v: string) => void; onSend: () => void; loading?: boolean; onGenerateQuiz?: () => void; onGenerateFlashcards?: () => void }) {
     const [toolsOpen, setToolsOpen] = React.useState(false)
     return (
       <div className="grid w-full ">
@@ -38,7 +38,7 @@ export function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz }: 
               <IconCheckbox className="size-4 text-badge-blue" />
               Quiz
             </Button>
-            <Button variant="outline" >
+            <Button variant="outline" onClick={() => { onGenerateFlashcards?.(); setToolsOpen(false) }}>
               <IconCards className="size-4 text-badge-green" />
               Flashcards
             </Button>
