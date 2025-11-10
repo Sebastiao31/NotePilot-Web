@@ -26,7 +26,7 @@ export function useChatSidebar() {
 export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false)
   const chatToggle = React.useCallback(() => setOpen((v) => !v), [])
-  const minWidth = 280
+  const minWidth = 360
   const maxWidth = 720
   const defaultWidth = 384
 

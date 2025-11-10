@@ -34,7 +34,7 @@ type QuizQuestion = {
 }
 type QuizPayload = { questions: QuizQuestion[]; source: 'transcript' | 'summary' }
 
-export function QuizDialog({ open, onOpenChange, loading, quiz, onRegenerate }: { open?: boolean; onOpenChange?: (open: boolean) => void; loading?: boolean; quiz?: QuizPayload | null; onRegenerate?: () => void }) {
+export function QuizDialog({ open, onOpenChange, loading, quiz, onRegenerate, error }: { open?: boolean; onOpenChange?: (open: boolean) => void; loading?: boolean; quiz?: QuizPayload | null; onRegenerate?: () => void; error?: string | null }) {
     const [quizUrl, setQuizUrl] = useState("")
   const [index, setIndex] = useState(0)
   const [selections, setSelections] = useState<Array<number | null>>([])
@@ -76,7 +76,19 @@ export function QuizDialog({ open, onOpenChange, loading, quiz, onRegenerate }: 
                 ) : null}
             </DialogHeader>
 
-            {!loading && quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0 ? (
+            {!loading && error ? (
+              <div className="space-y-4 pt-4">
+                <div className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm">
+                  {error}
+                </div>
+                <div className="flex items-center justify-end gap-2">
+                  <Button variant="ghost" onClick={() => onOpenChange?.(false)}>Close</Button>
+                  <Button onClick={() => onRegenerate?.()}>Try again</Button>
+                </div>
+              </div>
+            ) : null}
+
+            {!loading && !error && quiz && Array.isArray(quiz.questions) && quiz.questions.length > 0 ? (
               <div className="space-y-4 pt-4">
                 {showSummary ? (
                   <div className="space-y-5">

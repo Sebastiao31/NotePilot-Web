@@ -19,6 +19,7 @@ import { useAuth } from "@clerk/nextjs"
 import { createSupabaseClientBrowserAuthed } from "@/lib/supabase-browser"
 import { AllChats } from "./all-chats"
 import { NewChats } from "./new-chats"
+import { QuizDialog } from "./dialogs/quiz"
 
 
 export function ChatSidebar() {
@@ -43,6 +44,13 @@ export function ChatSidebar() {
   const [likedIds, setLikedIds] = React.useState<Set<string>>(new Set())
   const [dislikedIds, setDislikedIds] = React.useState<Set<string>>(new Set())
   const { getToken } = useAuth()
+
+  // Quiz state
+  const [quizOpen, setQuizOpen] = React.useState(false)
+  const [quizLoading, setQuizLoading] = React.useState(false)
+  const [quiz, setQuiz] = React.useState<any | null>(null)
+  const [quizError, setQuizError] = React.useState<string | null>(null)
+  const [existingQuiz, setExistingQuiz] = React.useState<any | null>(null)
 
   const isDraggingRef = React.useRef(false)
   const startXRef = React.useRef(0)
@@ -88,7 +96,36 @@ export function ChatSidebar() {
     setCopiedId(null)
     // let history loader select or create latest chat for the new note
     setChatId(null)
+    // reset quiz state and refetch for new note
+    setQuiz(null)
+    setExistingQuiz(null)
+    setQuizError(null)
+    setQuizOpen(false)
   }, [noteId])
+
+  // Prefetch existing quiz for this note
+  React.useEffect(() => {
+    let cancelled = false
+    async function loadExisting() {
+      if (!noteId) return
+      try {
+        const token = await getToken({ template: "supabase" })
+        if (!token) return
+        const supabase = createSupabaseClientBrowserAuthed(token)
+        const { data, error } = await supabase
+          .from("quizzes")
+          .select("content, created_at")
+          .eq("note_id", noteId)
+          .order("created_at", { ascending: false })
+          .limit(1)
+        if (error) return
+        const first = Array.isArray(data) && data.length ? (data[0] as any) : null
+        if (!cancelled) setExistingQuiz(first?.content ?? null)
+      } catch {}
+    }
+    loadExisting()
+    return () => { cancelled = true }
+  }, [noteId, getToken])
 
   // Load chat history for current note / selected chat
   React.useEffect(() => {
@@ -154,6 +191,50 @@ export function ChatSidebar() {
       }
     } catch {}
     finally { setLoading(false) }
+  }
+
+  async function handleGenerateQuiz(forceNew?: boolean) {
+    if (!noteId || quizLoading) return
+
+    // If a quiz already exists and not forcing regeneration, open the existing one
+    if (!forceNew && existingQuiz) {
+      setQuiz(existingQuiz)
+      setQuizError(null)
+      setQuizLoading(false)
+      setQuizOpen(true)
+      return
+    }
+
+    setQuizOpen(true)
+    setQuizLoading(true)
+    setQuiz(null)
+    setQuizError(null)
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 90000) // 90s safety timeout
+      const res = await fetch('/api/quizzes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ noteId }),
+        signal: controller.signal,
+      }).finally(() => clearTimeout(timeout))
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        setQuizError(err?.error || res.statusText || 'Failed to generate quiz')
+      } else {
+        const data = await res.json().catch(() => null as any)
+        if (data?.quiz) {
+          setQuiz(data.quiz)
+          setExistingQuiz(data.quiz)
+        } else {
+          setQuizError('Quiz generation returned no data')
+        }
+      }
+    } catch (e: any) {
+      setQuizError(e?.message || 'Quiz generation error')
+    } finally {
+      setQuizLoading(false)
+    }
   }
 
   async function handleCopy(content: string, id: string) {
@@ -355,8 +436,17 @@ export function ChatSidebar() {
         </div>
 
         <div className="pb-4 px-4 mt-auto">
-            <ChatInput value={input} onChange={setInput} onSend={handleSend} loading={loading} />
+            <ChatInput value={input} onChange={setInput} onSend={handleSend} loading={loading} onGenerateQuiz={() => handleGenerateQuiz(false)} />
         </div>
+
+        <QuizDialog
+          open={quizOpen}
+          onOpenChange={(o) => { if (!quizLoading) setQuizOpen(o) }}
+          loading={quizLoading}
+          quiz={quiz}
+          error={quizError}
+          onRegenerate={() => handleGenerateQuiz(true)}
+        />
       </div>
     </div>
   )
