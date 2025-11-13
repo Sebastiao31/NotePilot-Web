@@ -12,6 +12,10 @@ html, body {
   scrollbar-width: none;     /* Firefox */
 }
 
+/* Smooth scroll for in-page anchor navigation */
+html {
+  scroll-behavior: smooth;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -182,7 +186,6 @@ html, body {
   }
 }
 
-
 /* Basic editor styles */
 .tiptap {
   :first-child {
@@ -195,7 +198,6 @@ html, body {
       padding: 0 1rem;
       margin: 1.25rem 1rem 1.25rem 0.4rem;
 
-        
       li p {
         margin-top: 0.25em;
         margin-bottom: 0.25em;
@@ -207,8 +209,7 @@ html, body {
       padding: 0 1rem;
       margin: 1.25rem 1rem 1.25rem 0.4rem;
       list-style-type: decimal;
-    
-  
+
       li p {
         margin-top: 0.25em;
         margin-bottom: 0.25em;
@@ -399,7 +400,6 @@ html, body {
       border-radius: 0.25rem;
     }
   }
- 
 
 }
 
@@ -411,4 +411,13 @@ html, body {
 .tiptap:focus-visible,
 .tiptap:focus-within {
   outline: none;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

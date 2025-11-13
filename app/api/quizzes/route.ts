@@ -78,7 +78,7 @@ Requirements:
 - Prefer clarity, correctness, and unambiguous distractors.
 - Enumerate the options with A. B. C. D.
 - Always use markdown formatting when writing mathematical expressions to the question, options, and tip.
-- Always in the end of a questions say "Notepilot" so that the user knows its using this prompt to generate the quiz.
+
 
 # Math and formatting
 
