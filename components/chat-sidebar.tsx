@@ -385,8 +385,8 @@ export function ChatSidebar() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4" ref={scrollRef}>
-        <ScrollArea>
+        <div className="flex-1 overflow-y-auto " ref={scrollRef}>
+        <ScrollArea className="h-svh px-4">
           <div className="space-y-6 pt-6 pb-12">
             {historyLoading && messages.length === 0 ? (
               <div className="h-full flex items-center justify-center py-8">
