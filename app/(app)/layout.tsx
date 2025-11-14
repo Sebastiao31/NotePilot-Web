@@ -9,10 +9,13 @@ import { ChatProvider } from '@/components/chat-provider'
 import { ChatInset } from '@/components/chat-inset'
 import { ChatSidebar } from '@/components/chat-sidebar'
 import { EditModeProvider } from '@/components/edit-mode-provider'
+import { UpgradeHeader } from '@/components/upgrade-header'
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
+    <>
+    
     <SidebarProvider open={false} >
       <EditModeProvider>
         <ChatProvider>
@@ -36,6 +39,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </ChatProvider>
       </EditModeProvider>
     </SidebarProvider>
+    </>
   )
 }
 

@@ -16,6 +16,11 @@ import {
 } from "@/components/ui/sidebar"
 import { useEffect, useState } from "react"
 import { Toggle } from "@/components/ui/toggle"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface Note {
   id: string
@@ -62,18 +67,23 @@ export function NavSecondary() {
         <SidebarMenu>
 
           <SidebarMenuItem>
-            <div className="flex items-center justify-center px-2 py-1.5">
+            <Tooltip>
+              <TooltipTrigger>
               <Toggle
                 aria-label="Toggle dark mode"
                 pressed={isDark}
                 onPressedChange={handleThemeToggle}
                 variant="outline"
-                size="default"
+                size="sm"
                 className="border-none shadow-none data-[state=on]:bg-background  "
               >
                 {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
               </Toggle>
-            </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Toggle Theme</p>
+            </TooltipContent>
+            </Tooltip>
           </SidebarMenuItem>
          
         </SidebarMenu>

@@ -7,6 +7,7 @@ import {
   CircleUserRound,
   CreditCard,
   Info,
+  Link,
   LogOut,
   Megaphone,
   Settings,
@@ -35,7 +36,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { SignedIn, UserButton, useClerk, useUser } from "@clerk/nextjs"
-import SettingsDialog from "@/modals/settings"
+import { IconBolt } from "@tabler/icons-react"
+import { UpgradeDialog } from "./dialogs/upgrade"
+import { useRouter } from "next/navigation"
 
 export function NavUser({
   user,
@@ -47,9 +50,8 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const { signOut } = useClerk()
+  const { signOut, openUserProfile } = useClerk()
   const { user: signedInUser } = useUser()
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const displayEmail =
     signedInUser?.primaryEmailAddress?.emailAddress ||
     signedInUser?.emailAddresses?.[0]?.emailAddress ||
@@ -57,9 +59,13 @@ export function NavUser({
 
   const displayName = signedInUser?.fullName || displayEmail
 
+  const [upgradeOpen, setUpgradeOpen] = useState(false)
+  const router = useRouter()
   return (
+    <>
     <SidebarMenu>
       <SidebarMenuItem>
+      
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
@@ -67,7 +73,7 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:cursor-pointer"
             >
               <SignedIn >
-                <UserButton/>
+                <UserButton userProfileMode="modal" />
               </SignedIn>
               <div className="grid flex-1 text-left leading-tight">
                 <span className="truncate text-md font-medium">{displayName}</span>
@@ -93,8 +99,8 @@ export function NavUser({
             <DropdownMenuGroup>
               
               
-              <DropdownMenuItem>
-                  <Sparkles />
+              <DropdownMenuItem onClick={() => router.push("/pricing")}>
+                  <IconBolt />
                   Upgrade to Pro
                 </DropdownMenuItem>
               
@@ -106,10 +112,12 @@ export function NavUser({
                 <Info />
                 Help
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setIsSettingsOpen(true)}>
+
+              <DropdownMenuItem onClick={() => openUserProfile?.()}>
                 <Settings />
-                Settings
+                Manage Account
               </DropdownMenuItem>
+              
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -122,8 +130,11 @@ export function NavUser({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <SettingsDialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
       </SidebarMenuItem>
     </SidebarMenu>
+
+    <UpgradeDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
+
+    </>
   )
 }
