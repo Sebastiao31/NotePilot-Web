@@ -15,6 +15,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { IconFiles } from "@tabler/icons-react"
+import { ScrollArea } from "./ui/scroll-area"
 
 
 type NoteListItem = {
@@ -227,10 +228,10 @@ export function NoteList() {
     : visibleNotesFolder
 
   return (
-    <div className="space-y-2">
-      {visibleNotes.map((n) => (
-        <NoteItem key={n.id} note={n} />
-      ))}
+    <div className="space-y-2 pb-16">
+        {visibleNotes.map((n) => (
+          <NoteItem key={n.id} note={n} />
+        ))}
     </div>
   )
 }

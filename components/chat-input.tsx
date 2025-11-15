@@ -27,8 +27,10 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "./ui/switch"
 
 
-export  function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, onGenerateFlashcards }: { value: string; onChange: (v: string) => void; onSend: () => void; loading?: boolean; onGenerateQuiz?: () => void; onGenerateFlashcards?: () => void }) {
+
+export  function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, onGenerateFlashcards }: { value: string; onChange: (v: string) => void; onSend: (scope: boolean) => void; loading?: boolean; onGenerateQuiz?: () => void; onGenerateFlashcards?: () => void }) {
     const [toolsOpen, setToolsOpen] = React.useState(false)
+    const [scoped, setScoped] = React.useState(true)
 
     return (
       <div className="grid w-full ">
@@ -57,7 +59,7 @@ export  function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, o
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault()
-                if (!loading && value.trim()) onSend()
+                if (!loading && value.trim()) onSend(scoped)
               }
             }}
             disabled={loading}
@@ -82,9 +84,20 @@ export  function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, o
             />
 
             <span className="text-sm font-medium flex items-center gap-2 ">
+              <span className="flex items-center gap-1">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <IconInfoCircle className="size-3" />
+                  </TooltipTrigger>
+                  <TooltipContent className="text-center">
+                    <p>When the scope is ON its will use only <br /> the current note as context, otherwise it the <br /> answer won't be limited to the current note.</p>
+                  </TooltipContent>
+                </Tooltip>
               Scope:
-              <Switch
-              
+              </span>
+              <Switch 
+              checked={scoped}
+              onCheckedChange={setScoped}
               />
             </span>
             </div>
@@ -94,7 +107,7 @@ export  function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, o
               className="rounded-full"
               size="icon-xs"
               disabled={loading || !value.trim()}
-              onClick={onSend}
+              onClick={() => onSend(scoped)}
             >
               <ArrowUpIcon className="text-white"/>
               <span className="sr-only">Send</span>

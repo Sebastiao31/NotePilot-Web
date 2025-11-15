@@ -9,6 +9,7 @@ import { Button } from "./ui/button"
 import { SearchNotes } from "./search-notes"
 import NoteList from "./note-list"
 import { NoteFilter } from "./note-filter"
+import { ScrollArea } from "./ui/scroll-area"
 
 
 export function NoteSidebar() {
@@ -44,7 +45,9 @@ export function NoteSidebar() {
         <div className="flex-1 overflow-y-auto p-3 ">
           
           <div className="h-full">
+          
             <NoteList />
+           
           </div>
         </div>
 

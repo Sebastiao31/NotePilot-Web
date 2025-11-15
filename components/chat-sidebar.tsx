@@ -189,7 +189,7 @@ export function ChatSidebar() {
     return () => { ignore = true }
     }, [noteId, chatId])
 
-  async function handleSend() {
+  async function handleSend(scope: boolean) {
     const text = input.trim()
     if (!text || !noteId || loading) return
     setLoading(true)
@@ -197,7 +197,7 @@ export function ChatSidebar() {
     setMessages((prev) => [...prev, { id: localId, role: 'user', content: text }])
     setInput("")
     try {
-      const res = await fetch('/api/chat/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ noteId, message: text }) })
+      const res = await fetch('/api/chat/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ noteId, message: text, scope }) })
       if (res.ok) {
         const data = await res.json()
         if (data.chatId && !chatId) setChatId(data.chatId)
@@ -386,7 +386,6 @@ export function ChatSidebar() {
         </div>
 
         <div className="flex-1 overflow-y-auto " ref={scrollRef}>
-        <ScrollArea className="h-svh px-4">
           <div className="space-y-6 pt-6 pb-12">
             {historyLoading && messages.length === 0 ? (
               <div className="h-full flex items-center justify-center py-8">
@@ -508,7 +507,6 @@ export function ChatSidebar() {
               </div>
             ) : null}
           </div>
-          </ScrollArea>
         </div>
 
         <div className="pb-4 px-4 mt-auto">
