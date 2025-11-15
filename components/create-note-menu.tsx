@@ -14,12 +14,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from './ui/button'
+import { AudioDialog } from './dialogs/audio'
 
 export const CreateNoteMenu = () => {
   const [youtubeOpen, setYoutubeOpen] = useState(false)
   const [websiteOpen, setWebsiteOpen] = useState(false)
   const [textOpen, setTextOpen] = useState(false)
   const [pdfOpen, setPdfOpen] = useState(false)
+  const [audioOpen, setAudioOpen] = useState(false)
+
   return (
     <>
     <DropdownMenu>
@@ -84,7 +87,7 @@ export const CreateNoteMenu = () => {
                 <span>Upload PDF</span>
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setAudioOpen(true)}>
               <IconFileMusicFilled className="size-4" />
               <span className="ml-2">Upload Audio</span>
             </DropdownMenuItem>
@@ -98,6 +101,7 @@ export const CreateNoteMenu = () => {
     <WebsiteDialog open={websiteOpen} onOpenChange={setWebsiteOpen} />
     <TextDialog open={textOpen} onOpenChange={setTextOpen} />
     <PdfDialog open={pdfOpen} onOpenChange={setPdfOpen} />
+    <AudioDialog open={audioOpen} onOpenChange={setAudioOpen} />
     </>
   )
 }

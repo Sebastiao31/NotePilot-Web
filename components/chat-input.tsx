@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { IconBrain, IconCards, IconCheck, IconCheckbox, IconInfoCircle, IconPlus } from "@tabler/icons-react"
 import { ArrowUpIcon, Search } from "lucide-react"
@@ -25,27 +26,26 @@ import { AiTools } from "./ai-tools"
 import { Button } from "@/components/ui/button"
 import { Switch } from "./ui/switch"
 
-export function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, onGenerateFlashcards }: { value: string; onChange: (v: string) => void; onSend: () => void; loading?: boolean; onGenerateQuiz?: () => void; onGenerateFlashcards?: () => void }) {
+
+export  function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, onGenerateFlashcards }: { value: string; onChange: (v: string) => void; onSend: () => void; loading?: boolean; onGenerateQuiz?: () => void; onGenerateFlashcards?: () => void }) {
     const [toolsOpen, setToolsOpen] = React.useState(false)
+
     return (
       <div className="grid w-full ">
           <div
             className={`rounded-t-xl  py-2 transition-all duration-300 overflow-hidden ${toolsOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}`}
           aria-hidden={!toolsOpen}
         >
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <Button variant="outline"  onClick={() => { onGenerateQuiz?.(); setToolsOpen(false) }}>
-              <IconCheckbox className="size-4 text-badge-blue" />
+              <IconCheckbox className="size-4 " />
               Quiz
             </Button>
             <Button variant="outline" onClick={() => { onGenerateFlashcards?.(); setToolsOpen(false) }}>
-              <IconCards className="size-4 text-badge-green" />
+              <IconCards className="size-4 " />
               Flashcards
             </Button>
-            <Button variant="outline" >
-              <IconBrain className="size-4 text-badge-purple" />
-              Mindmap
-            </Button>
+            
           </div>
         </div>
         
