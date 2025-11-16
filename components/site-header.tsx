@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { IconFileUploadFilled } from '@tabler/icons-react'
+import { Export } from './export'
 
 export function SiteHeader() {
     const { editMode, setEditMode } = useEditMode()
@@ -108,23 +109,11 @@ export function SiteHeader() {
               <Switch checked={editMode} onCheckedChange={setEditMode} />
             </div>
             <Separator orientation="vertical" className="h-4 data-[orientation=vertical]:h-4" />
-            <div className="flex items-center">
+            <div className="flex items-center ">
               <Button variant="ghost">
                 Transcript
               </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost">
-                    Export
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="mr-2">
-                  <DropdownMenuItem>
-                    <IconFileUploadFilled className="size-4" />
-                    <span>Export PDF</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Export />
             </div>
           </div>
           ) : null}

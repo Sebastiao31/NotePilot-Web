@@ -64,6 +64,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
+    "react-sketch-canvas": "^6.2.0",
     "react-textarea-autosize": "^8.5.9",
     "react-use-measure": "^2.1.7",
     "reactflow": "^11.11.4",

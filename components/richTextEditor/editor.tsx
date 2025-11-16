@@ -5,7 +5,7 @@ import { IconBan, IconBold, IconCircle, IconCircleFilled, IconCode, IconItalic, 
 import { EditorContent, ReactNodeViewRenderer, useEditor } from '@tiptap/react'
 import { BubbleMenu, FloatingMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Tooltip,
   TooltipContent,
@@ -20,6 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Button } from '../ui/button'
+import { Export } from '../export'
 import Highlight from '@tiptap/extension-highlight'
 import { useEditorBridge } from './editor-context'
 import { TableKit } from '@tiptap/extension-table'
@@ -28,6 +29,7 @@ import Math, { migrateMathStrings } from '@tiptap/extension-mathematics'
 import 'katex/dist/katex.min.css'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
+import { useCallback } from 'react'
 
 export default function Editor({ noteId, initialContent = "" }: { noteId: string; initialContent?: string }) {
   const [updateCounter, setUpdateCounter] = useState(0)
@@ -37,6 +39,7 @@ export default function Editor({ noteId, initialContent = "" }: { noteId: string
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [debounceTimer, setDebounceTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
+  const printRef = useRef<HTMLDivElement>(null);
   
 
   
@@ -183,6 +186,8 @@ export default function Editor({ noteId, initialContent = "" }: { noteId: string
     }
   }
 
+  // Export is handled by the shared <Export /> component via the editor bridge.
+  
 
   return (
     <>
@@ -270,9 +275,11 @@ export default function Editor({ noteId, initialContent = "" }: { noteId: string
         </BubbleMenu>
       )}
 
-     
 
+     
+      <div  ref={printRef} >
       <EditorContent editor={editor} />
+      </div>
     </>
   )
 }

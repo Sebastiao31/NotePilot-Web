@@ -13,6 +13,11 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip"
 import { ListOrdered, SquareCode, SquareSigma } from "lucide-react"
 import { useEditorBridge } from "@/components/richTextEditor/editor-context"
 import { useEditorState } from "@tiptap/react"
+import { InlineMathBoard } from "./inline-math-board"
+import { BlockMathBoard } from "./block-math-board"
+
+
+
 // Constants mirrored from ui/sidebar.tsx for layout math
 const APP_SIDEBAR_WIDTH_EXPANDED = 14 * 16 // 14rem
 const APP_SIDEBAR_WIDTH_ICON = 3 * 16 // 3rem
@@ -160,27 +165,9 @@ export function FloatingBar() {
             </TooltipContent>
         </Tooltip>
 
-        <Tooltip>
-            <TooltipTrigger>
-                <Button variant="ghost" size="icon">
-                    <IconSquareRoot2 />
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-                <p>Insert Inline Equation</p>
-            </TooltipContent>
-        </Tooltip>
+        <InlineMathBoard />
 
-        <Tooltip>
-            <TooltipTrigger>
-                <Button variant="ghost" size="icon">
-                    <SquareSigma />
-                </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-                <p>Insert Math Block</p>
-            </TooltipContent>
-        </Tooltip>
+        <BlockMathBoard />
         </div>
 
         <Separator orientation="vertical" className="h-4 data-[orientation=vertical]:h-4" />
