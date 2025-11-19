@@ -386,7 +386,7 @@ export function ChatSidebar() {
         </div>
 
         <div className="flex-1 overflow-y-auto " ref={scrollRef}>
-          <div className="space-y-6 pt-6 pb-12">
+          <div className="space-y-6 px-4 pt-6 pb-12">
             {historyLoading && messages.length === 0 ? (
               <div className="h-full flex items-center justify-center py-8">
                 <IconLoader2 className="size-5 animate-spin text-muted-foreground" />

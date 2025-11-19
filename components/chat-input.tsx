@@ -1,6 +1,6 @@
 
 import * as React from "react"
-import { IconBrain, IconCards, IconCheck, IconCheckbox, IconInfoCircle, IconPlus } from "@tabler/icons-react"
+import { IconBrain, IconCheck, IconInfoCircle, IconPlus } from "@tabler/icons-react"
 import { ArrowUpIcon, Search } from "lucide-react"
 import {
   DropdownMenu,
@@ -25,6 +25,8 @@ import {
 import { AiTools } from "./ai-tools"
 import { Button } from "@/components/ui/button"
 import { Switch } from "./ui/switch"
+import { QuizBtn } from "@/components/quiz-btn"
+import { FlashcardsBtn } from "@/components/flashcards-btn"
 
 
 
@@ -39,16 +41,9 @@ export  function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, o
           aria-hidden={!toolsOpen}
         >
             <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline"  onClick={() => { onGenerateQuiz?.(); setToolsOpen(false) }}>
-              <IconCheckbox className="size-4 " />
-              Quiz
-            </Button>
-            <Button variant="outline" onClick={() => { onGenerateFlashcards?.(); setToolsOpen(false) }}>
-              <IconCards className="size-4 " />
-              Flashcards
-            </Button>
-            
-          </div>
+              <QuizBtn onClick={() => { onGenerateQuiz?.(); setToolsOpen(false) }} />
+              <FlashcardsBtn onClick={() => { onGenerateFlashcards?.(); setToolsOpen(false) }} />
+            </div>
         </div>
         
         <InputGroup>

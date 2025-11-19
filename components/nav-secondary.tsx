@@ -21,6 +21,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { IconBoltFilled } from "@tabler/icons-react"
+import { Button } from "./ui/button"
+import { Separator } from "./ui/separator"
+import { useRouter } from "next/navigation"
 
 interface Note {
   id: string
@@ -45,6 +49,24 @@ export function NavSecondary() {
   const [loading, setLoading] = useState(true)
   const pathname = usePathname()
   const [isDark, setIsDark] = useState(false)
+  const router = useRouter()
+  const [allowed, setAllowed] = React.useState<boolean>(false)
+
+  React.useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch("/api/billing/has-quiz", { method: "GET", cache: "no-store" })
+        const data = await res.json()
+        if (!cancelled) setAllowed(Boolean(data?.allowed))
+      } catch {
+        if (!cancelled) setAllowed(false)
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
 
   useEffect(() => {
     if (typeof window === "undefined") return
@@ -65,6 +87,25 @@ export function NavSecondary() {
     <SidebarGroup className="mt-auto">
       
         <SidebarMenu>
+
+          <div className={allowed ? "hidden" : ""}>
+            <SidebarMenuItem>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button size="icon-sm" onClick={() => router.push("/pricing")}>
+                    <IconBoltFilled className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  Upgrade to Pro
+                </TooltipContent>
+              </Tooltip>
+            </SidebarMenuItem>
+
+            <Separator
+              className="h-full mt-4"
+            />
+          </div>
 
           <SidebarMenuItem>
             <Tooltip>

@@ -35,14 +35,14 @@ export const CreateNoteMenu = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="ml-2">
-        <DropdownMenuItem onClick={() => setYoutubeOpen(true)}>
+        <DropdownMenuItem disabled onClick={() => setYoutubeOpen(true)}>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-badge-red-foreground rounded-md">
               <IconBrandYoutubeFilled className="size-4 text-badge-red" />
             </div>
             <div className="flex flex-col pr-2">
               <span>Youtube</span>
-              <span className="text-xs text-muted-foreground">Create note from youtube video</span>
+              <span className="text-xs text-muted-foreground">Coming soon</span>
             </div>
           </div>
         </DropdownMenuItem>

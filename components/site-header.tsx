@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { IconFileUploadFilled } from '@tabler/icons-react'
 import { Export } from './export'
+import { Transcript } from './transcript'
 
 export function SiteHeader() {
     const { editMode, setEditMode } = useEditMode()
@@ -110,9 +111,7 @@ export function SiteHeader() {
             </div>
             <Separator orientation="vertical" className="h-4 data-[orientation=vertical]:h-4" />
             <div className="flex items-center ">
-              <Button variant="ghost">
-                Transcript
-              </Button>
+              <Transcript />
               <Export />
             </div>
           </div>

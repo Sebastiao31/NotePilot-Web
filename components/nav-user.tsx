@@ -104,11 +104,8 @@ export function NavUser({
                   Upgrade to Pro
                 </DropdownMenuItem>
               
-              <DropdownMenuItem>
-                <Megaphone />
-                Feedback
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              
+              <DropdownMenuItem onClick={() => router.push("/help")}>
                 <Info />
                 Help
               </DropdownMenuItem>
