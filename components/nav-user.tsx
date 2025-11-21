@@ -61,6 +61,21 @@ export function NavUser({
 
   const [upgradeOpen, setUpgradeOpen] = useState(false)
   const router = useRouter()
+  const [allowed, setAllowed] = React.useState<boolean>(false)
+
+  React.useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch("/api/billing/has-quiz", { method: "GET", cache: "no-store" })
+        const data = await res.json()
+        if (!cancelled) setAllowed(Boolean(data?.allowed))
+      } catch {
+        if (!cancelled) setAllowed(false)
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
   return (
     <>
     <SidebarMenu>
@@ -99,10 +114,12 @@ export function NavUser({
             <DropdownMenuGroup>
               
               
-              <DropdownMenuItem onClick={() => router.push("/pricing")}>
-                  <IconBolt />
-                  Upgrade to Pro
-                </DropdownMenuItem>
+              {!allowed && (
+                <DropdownMenuItem onClick={() => router.push("/pricing")} >
+                    <IconBolt />
+                    Upgrade to Pro
+                  </DropdownMenuItem>
+              )}
               
               
               <DropdownMenuItem onClick={() => router.push("/help")}>
