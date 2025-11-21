@@ -92,7 +92,7 @@ export default function HelpPage() {
 
             
             </div>
-
+{/* 
             <div>
                 <h2 className="text-lg font-medium">Contact us</h2>
                 <p className="text-muted-foreground text-sm">NotePilot was a tool made for you. Help us improve it.</p>
@@ -107,6 +107,7 @@ export default function HelpPage() {
                     <span>Contact us</span>
                 </Button>
             </div>
+            */}
         </main>
     )
 }

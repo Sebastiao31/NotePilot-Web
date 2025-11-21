@@ -4,11 +4,11 @@ import Link from 'next/link'
 const links = [
     {
         title: 'Privacy Policy',
-        href: '#',
+        href: 'https://www.notion.so/Privacy-Policy-2b20303a25c180c4aa5ccde294b8011b?source=copy_link',
     },
     {
         title: 'Terms of Service',
-        href: '#',
+        href: 'https://www.notion.so/Terms-of-Service-2b20303a25c180b0b76ede3bb8defc72?source=copy_link',
     },
     
 ]

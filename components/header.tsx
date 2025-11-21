@@ -14,7 +14,7 @@ const menuItems = [
     { name: 'FAQs', href: '/#faqs' },
 ]
 
-export const HeroHeader = () => {
+export default function Header() {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
 
@@ -105,16 +105,10 @@ export const HeroHeader = () => {
                             </div>
                             </SignedOut>
                             <SignedIn>
+                               
                                 <Button
                                     asChild
-                                    className={cn(isScrolled && 'rounded-full lg:hidden')}>
-                                    <Link href="/notes">
-                                        <span>My Notes</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    className={cn(isScrolled ? 'rounded-full lg:inline-flex' : 'hidden')}>
+                                    className={cn(isScrolled && 'rounded-full lg:inline-flex')}>
                                     <Link href="/notes">
                                         <span>My Notes</span>
                                     </Link>
