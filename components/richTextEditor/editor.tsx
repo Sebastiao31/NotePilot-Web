@@ -12,7 +12,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { ChevronDown, ChevronsDownIcon, ChevronsUpDownIcon, Heading1, Heading2, Heading3 } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Separator } from '../ui/separator'
 import {
   Popover,
@@ -194,27 +193,79 @@ export default function Editor({ noteId, initialContent = "" }: { noteId: string
     <>
       {editor && (
         <BubbleMenu className="bubble-menu bg-background border border-border rounded-lg p-1 space-x-1 flex items-center" editor={editor}>
-        <Select key={currentBlockLevel} value={currentBlockLevel} onValueChange={handleHeadingChange}>
-          <SelectTrigger size="sm" onMouseDown={(e) => e.stopPropagation()} className="border-none shadow-none hover:bg-accent hover:cursor-pointer">
+        <Popover>
+          <PopoverTrigger className="flex items-center gap-2 h-8 px-2 rounded-md hover:bg-accent hover:cursor-pointer">
             {headingOptions.find(option => option.task === currentBlockLevel)?.icon}
-            <SelectValue placeholder="Text">
+            <span className="text-sm">
               {headingOptions.find(option => option.task === currentBlockLevel)?.value || 'Text'}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {headingOptions.map(items => (
-              <SelectItem key={items.task} value={items.task}>
-                {items.icon} {items.value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+            </span>
+            <ChevronDown className="size-4" />
+          </PopoverTrigger>
+          <PopoverContent className="w-44 mt-3 p-1 flex flex-col gap-1 items-stretch">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={currentBlockLevel === 'p' ? 'is-active justify-start' : 'justify-start'}
+              onClick={() => handleHeadingChange('p')}
+            >
+              <span className="mr-2">{headingOptions[0].icon}</span>
+              {headingOptions[0].value}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={currentBlockLevel === 'h1' ? 'is-active justify-start' : 'justify-start'}
+              onClick={() => handleHeadingChange('h1')}
+            >
+              <span className="mr-2">{headingOptions[1].icon}</span>
+              {headingOptions[1].value}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={currentBlockLevel === 'h2' ? 'is-active justify-start' : 'justify-start'}
+              onClick={() => handleHeadingChange('h2')}
+            >
+              <span className="mr-2">{headingOptions[2].icon}</span>
+              {headingOptions[2].value}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={currentBlockLevel === 'h3' ? 'is-active justify-start' : 'justify-start'}
+              onClick={() => handleHeadingChange('h3')}
+            >
+              <span className="mr-2">{headingOptions[3].icon}</span>
+              {headingOptions[3].value}
+            </Button>
+          </PopoverContent>
+        </Popover>
 
         <Separator orientation="vertical" className="h-4 data-[orientation=vertical]:h-4" />
 
         <Popover>
           <PopoverTrigger className="flex items-center gap-2 h-8 px-2 rounded-md hover:bg-accent hover:cursor-pointer">
-            <IconCircleFilled className="size-4" />
+            {
+              (() => {
+                const isYellow = editor.isActive('highlight', { color: 'var(--color-highlight-yellow)' })
+                const isRed = editor.isActive('highlight', { color: 'var(--color-highlight-red)' })
+                const isBlue = editor.isActive('highlight', { color: 'var(--color-highlight-blue)' })
+                const isPurple = editor.isActive('highlight', { color: 'var(--color-highlight-purple)' })
+                const isGreen = editor.isActive('highlight', { color: 'var(--color-highlight-green)' })
+
+                const activeClass =
+                  isYellow ? 'text-highlight-yellow' :
+                  isRed ? 'text-highlight-red' :
+                  isBlue ? 'text-highlight-blue' :
+                  isPurple ? 'text-highlight-purple' :
+                  isGreen ? 'text-highlight-green' :
+                  null
+
+                return activeClass
+                  ? <IconCircleFilled className={`size-4 ${activeClass}`} />
+                  : <IconCircle className="size-4 text-muted-foreground" />
+              })()
+            }
             <ChevronDown className="size-4" />
           </PopoverTrigger>
           <PopoverContent className="w-fit mt-3 p-1 flex flex-row gap-1 items-center">

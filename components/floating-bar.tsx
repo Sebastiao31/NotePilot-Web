@@ -8,9 +8,9 @@ import { useSidebar } from "@/components/ui/sidebar"
 import { useEditMode } from "@/components/edit-mode-provider"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { IconArrowBackUp, IconArrowForwardUp, IconMathFunctionY, IconSquareRoot2, IconTable, IconBold, IconQuote, IconList } from "@tabler/icons-react"
+import { IconArrowBackUp, IconArrowForwardUp, IconMathFunctionY, IconSquareRoot2, IconTable, IconBold, IconQuote, IconList, IconLetterT } from "@tabler/icons-react"
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip"
-import { ListOrdered, SquareCode, SquareSigma } from "lucide-react"
+import { ListOrdered, SquareCode, SquareSigma, Heading1, Heading2, Heading3 } from "lucide-react"
 import { useEditorBridge } from "@/components/richTextEditor/editor-context"
 import { useEditorState } from "@tiptap/react"
 import { InlineMathBoard } from "./inline-math-board"
@@ -72,6 +72,12 @@ export function FloatingBar() {
     ? 'h3'
     : 'p'
 
+  const currentBlockIcon =
+    currentBlockLevel === 'h1' ? <Heading1 className="size-4" /> :
+    currentBlockLevel === 'h2' ? <Heading2 className="size-4" /> :
+    currentBlockLevel === 'h3' ? <Heading3 className="size-4" /> :
+    <IconLetterT className="size-3" />
+
   const handleHeadingChange = (value: string) => {
     if (!editor) return
     switch (value) {
@@ -111,10 +117,22 @@ export function FloatingBar() {
             <SelectValue placeholder="Text" />
           </SelectTrigger>
           <SelectContent className="mb-2">
-            <SelectItem value="p">Text</SelectItem>
-            <SelectItem value="h1">Heading 1</SelectItem>
-            <SelectItem value="h2">Heading 2</SelectItem>
-            <SelectItem value="h3">Heading 3</SelectItem>
+            <SelectItem value="p">
+              <span className=" inline-flex items-center"><IconLetterT className="size-3" /></span>
+              Text
+            </SelectItem>
+            <SelectItem value="h1">
+              <span className="inline-flex items-center"><Heading1 className="size-4" /></span>
+              Heading 1
+            </SelectItem>
+            <SelectItem value="h2">
+              <span className="inline-flex items-center"><Heading2 className="size-4" /></span>
+              Heading 2
+            </SelectItem>
+            <SelectItem value="h3">
+              <span className="inline-flex items-center"><Heading3 className="size-4" /></span>
+              Heading 3
+            </SelectItem>
           </SelectContent>
         </Select>
 
