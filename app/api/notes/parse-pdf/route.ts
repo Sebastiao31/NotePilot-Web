@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server'
-import { createRequire } from 'module'
 
 export const runtime = 'nodejs'          // MUST be Node (Edge will fail)
 export const dynamic = 'force-dynamic'
@@ -28,9 +27,18 @@ export async function POST(req: NextRequest) {
     // Blob -> Buffer
     const buffer = Buffer.from(await file.arrayBuffer())
 
-    // Load CommonJS module safely from an ESM file
-    const require = createRequire(import.meta.url)
-    const pdfParse = require('pdf-parse-new') as (buf: Buffer, opts?: any) => Promise<any>
+    // Load parser with a production-safe import so bundlers include it.
+    // Try 'pdf-parse-new' first; fall back to 'pdf-parse' if unavailable.
+    let pdfParse: (buf: Buffer, opts?: any) => Promise<any>
+    let parserName = 'pdf-parse-new'
+    try {
+      const mod: any = await import('pdf-parse-new')
+      pdfParse = (mod?.default ?? mod) as (buf: Buffer, opts?: any) => Promise<any>
+    } catch {
+      const mod: any = await import('pdf-parse')
+      pdfParse = (mod?.default ?? mod) as (buf: Buffer, opts?: any) => Promise<any>
+      parserName = 'pdf-parse'
+    }
 
     const data = await pdfParse(buffer, { max: 0 })
 
@@ -38,7 +46,7 @@ export async function POST(req: NextRequest) {
       text: data?.text ?? '',
       numpages: (data as any)?.numpages ?? null,
       info: data?.info ?? null,
-      version: 'pdf-parse-new',
+      version: parserName,
     })
   } catch (err: any) {
     console.error('parse-pdf error:', err)
