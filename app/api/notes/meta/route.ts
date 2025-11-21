@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const supabase = await createSupabaseClient()
     const { data, error } = await supabase
       .from("notes")
-      .select("id, type, created_at, updated_at, url, transcript")
+      .select("id, type, created_at, updated_at, url, transcript, like, dislike, feedback")
       .eq("id", id)
       .eq("user_id", userId)
       .single()

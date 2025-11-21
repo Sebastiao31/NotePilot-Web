@@ -77,10 +77,7 @@ export function NoteOptions({ noteId, folderId }: { noteId: string; folderId?: s
                 <DropdownMenuLabel>
                     Options
                 </DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => router.push(`/notes/${noteId}?rename=1`)}>
-                    <IconForms className="size-4" />
-                    Change name
-                </DropdownMenuItem>
+               
 
                 <DropdownMenuSub>
                     <DropdownMenuSubTrigger>

@@ -43,6 +43,7 @@ export function WebsiteDialog({ open: controlledOpen, onOpenChange }: { open?: b
   const open = isControlled ? controlledOpen! : uncontrolledOpen
   const setOpen = isControlled ? onOpenChange! : setUncontrolledOpen
   const [submitting, setSubmitting] = useState(false)
+  const [checking, setChecking] = useState(false)
   const router = useRouter()
 
   async function summarize(noteId: string) {
@@ -60,6 +61,21 @@ export function WebsiteDialog({ open: controlledOpen, onOpenChange }: { open?: b
 
   async function onCreate() {
     if (!websiteUrl) return
+    // Gate: allow creation only if under limit or on Pro
+    setChecking(true)
+    try {
+      const gateRes = await fetch("/api/billing/can-create-note", { method: "GET", cache: "no-store" })
+      const gateData = await gateRes.json()
+      if (!gateData?.allowed) {
+        setChecking(false)
+        setOpen(false)
+        router.push("/pricing")
+        return
+      }
+    } catch {
+      setChecking(false)
+    }
+    setChecking(false)
     setSubmitting(true)
     try {
       toast("Generating note...")
@@ -114,7 +130,7 @@ export function WebsiteDialog({ open: controlledOpen, onOpenChange }: { open?: b
             <DialogClose asChild>
               <Button variant="ghost" className="rounded-full">Cancel</Button>
             </DialogClose>
-            <Button type="button" disabled={!websiteUrl || submitting} onClick={onCreate}>{submitting ? 'Creating...' : 'Create note'}</Button>
+            <Button type="button" disabled={!websiteUrl || submitting || checking} onClick={onCreate}>{checking ? 'Loading...' : submitting ? 'Creating...' : 'Create note'}</Button>
           </DialogFooter>
         </DialogContent>
         </Dialog>

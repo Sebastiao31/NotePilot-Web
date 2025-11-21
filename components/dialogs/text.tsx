@@ -40,6 +40,7 @@ import { emitNotesInsert, emitNotesUpdate } from '@/lib/events'
 export function TextDialog({ open: controlledOpen, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const [text, setText] = useState("")
   const [submitting, setSubmitting] = useState(false)
+  const [checking, setChecking] = useState(false)
   const router = useRouter()
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
   const isControlled = controlledOpen !== undefined && typeof onOpenChange === 'function'
@@ -61,6 +62,21 @@ export function TextDialog({ open: controlledOpen, onOpenChange }: { open?: bool
 
   async function onCreate() {
     if (!text) return
+    // Gate: allow creation only if under limit or on Pro
+    setChecking(true)
+    try {
+      const gateRes = await fetch("/api/billing/can-create-note", { method: "GET", cache: "no-store" })
+      const gateData = await gateRes.json()
+      if (!gateData?.allowed) {
+        setChecking(false)
+        setOpen(false)
+        router.push("/pricing")
+        return
+      }
+    } catch {
+      setChecking(false)
+    }
+    setChecking(false)
     setSubmitting(true)
     try {
       toast("Generating note...")
@@ -118,10 +134,10 @@ export function TextDialog({ open: controlledOpen, onOpenChange }: { open?: bool
             </DialogClose>
             <Button
               type="button"
-              disabled={!text || submitting}
+              disabled={!text || submitting || checking}
               onClick={onCreate}
             >
-              {submitting ? "Creating..." : "Create note"}
+              {checking ? "Loading..." : submitting ? "Creating..." : "Create note"}
             </Button>
           </DialogFooter>
         </DialogContent>

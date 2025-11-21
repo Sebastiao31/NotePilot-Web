@@ -21,6 +21,7 @@ export function AudioDialog({ open, onOpenChange }: { open?: boolean; onOpenChan
     const [file, setFile] = useState<File | null>(null)
     const [transcribing, setTranscribing] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+  const [checking, setChecking] = useState(false)
     const controlledProps = open === undefined ? {} : { open, onOpenChange }
     const router = useRouter()
 
@@ -85,6 +86,21 @@ export function AudioDialog({ open, onOpenChange }: { open?: boolean; onOpenChan
         setError("Please select an audio file")
         return
       }
+      // Gate: allow creation only if under limit or on Pro
+      setChecking(true)
+      try {
+        const gateRes = await fetch("/api/billing/can-create-note", { method: "GET", cache: "no-store" })
+        const gateData = await gateRes.json()
+        if (!gateData?.allowed) {
+          setChecking(false)
+          onOpenChange?.(false)
+          router.push("/pricing")
+          return
+        }
+      } catch {
+        setChecking(false)
+      }
+      setChecking(false)
       try {
         setSubmitting(true)
         toast("Generating note...")
@@ -152,8 +168,8 @@ export function AudioDialog({ open, onOpenChange }: { open?: boolean; onOpenChan
             <DialogClose asChild>
               <Button variant="ghost" className="rounded-full">Cancel</Button>
             </DialogClose>
-            <Button type="button" onClick={onCreate} disabled={!file || transcribing || submitting}>
-              {transcribing || submitting ? "Creating..." : "Create note"}
+            <Button type="button" onClick={onCreate} disabled={!file || transcribing || submitting || checking}>
+              {checking ? "Loading..." : transcribing || submitting ? "Creating..." : "Create note"}
             </Button>
           </DialogFooter>
         </DialogContent>

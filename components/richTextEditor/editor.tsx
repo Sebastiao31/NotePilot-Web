@@ -30,6 +30,7 @@ import 'katex/dist/katex.min.css'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import { useCallback } from 'react'
+import RateNote from '../rate-note'
 
 export default function Editor({ noteId, initialContent = "" }: { noteId: string; initialContent?: string }) {
   const [updateCounter, setUpdateCounter] = useState(0)
@@ -279,6 +280,9 @@ export default function Editor({ noteId, initialContent = "" }: { noteId: string
      
       <div  ref={printRef} >
       <EditorContent editor={editor} />
+      <div className="mt-8">
+      <RateNote noteId={noteId} />
+      </div>
       </div>
     </>
   )

@@ -42,7 +42,7 @@ export const CreateNoteMenu = () => {
             </div>
             <div className="flex flex-col pr-2">
               <span>Youtube</span>
-              <span className="text-xs text-muted-foreground">Coming soon</span>
+              <span className="text-xs text-muted-foreground">Maintenance...</span>
             </div>
           </div>
         </DropdownMenuItem>

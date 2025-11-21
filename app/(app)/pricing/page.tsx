@@ -1,5 +1,10 @@
 import React from 'react'
 import { PricingTable } from '@clerk/nextjs'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+  } from "@/components/ui/avatar"
 
 
 export default function PricingPage() {
@@ -10,6 +15,29 @@ export default function PricingPage() {
                 <p className="text-muted-foreground">Take the most out of NotePilot with all the features.</p>
             </div>
             <PricingTable />
+
+            <div className="flex items-center gap-2 justify-center">
+                <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-3 ">
+                    <Avatar className='size-7'>
+                    <AvatarImage src="/people/man_1.jpg" alt="John Doe" />
+                    </Avatar>
+                    <Avatar className='size-7'>
+                    <AvatarImage
+                        src="/people/man_2.jpg"
+                        alt="Jane Doe"
+                    />
+                    </Avatar>
+                    <Avatar className='size-7'>
+                    <AvatarImage
+                        src="/people/man_3.jpg"
+                        alt="Jim Doe"
+                    />
+                    </Avatar>
+                </div>
+            <div>
+                <p className="text-muted-foreground">Join +100k Students</p>
+            </div>
+            </div>
         </main>
     )
 }

@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react'
 import {
     Dialog,
@@ -25,6 +26,7 @@ export function PdfDialog({ open, onOpenChange, onParsed }: { open?: boolean; on
   const [parsedText, setParsedText] = React.useState<string>("")
   const [submitting, setSubmitting] = React.useState(false)
   const [parsing, setParsing] = React.useState(false)
+  const [checking, setChecking] = React.useState(false)
   const router = useRouter()
 
 
@@ -102,6 +104,21 @@ export function PdfDialog({ open, onOpenChange, onParsed }: { open?: boolean; on
       setError('Please upload a valid PDF first')
       return
     }
+    // Gate: allow creation only if under limit or on Pro
+    setChecking(true)
+    try {
+      const gateRes = await fetch("/api/billing/can-create-note", { method: "GET", cache: "no-store" })
+      const gateData = await gateRes.json()
+      if (!gateData?.allowed) {
+        setChecking(false)
+        onOpenChange?.(false)
+        router.push("/pricing")
+        return
+      }
+    } catch {
+      setChecking(false)
+    }
+    setChecking(false)
     try {
       setSubmitting(true)
       toast("Generating note...")
@@ -156,8 +173,8 @@ export function PdfDialog({ open, onOpenChange, onParsed }: { open?: boolean; on
         <DialogClose asChild>
           <Button variant="ghost" className="rounded-full">Cancel</Button>
         </DialogClose>
-        <Button type="button" onClick={onCreate} disabled={!completed || !parsedText || submitting || parsing}>
-          {parsing ? 'Parsing...' : submitting ? 'Creating...' : 'Create note'}
+        <Button type="button" onClick={onCreate} disabled={!completed || !parsedText || submitting || parsing || checking}>
+          {parsing ? 'Parsing...' : checking ? 'Loading...' : submitting ? 'Creating...' : 'Create note'}
         </Button>
       </DialogFooter>
     </DialogContent>

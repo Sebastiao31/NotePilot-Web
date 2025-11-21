@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id, summary, transcript, status, title } = await req.json();
+    const { id, summary, transcript, status, title, like, dislike, feedback } = await req.json();
     if (!id || typeof id !== "string") {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
@@ -37,6 +37,24 @@ export async function POST(req: NextRequest) {
     ) {
       return NextResponse.json({ error: "Invalid title" }, { status: 400 });
     }
+    if (
+      like !== undefined &&
+      typeof like !== "boolean"
+    ) {
+      return NextResponse.json({ error: "Invalid like" }, { status: 400 });
+    }
+    if (
+      dislike !== undefined &&
+      typeof dislike !== "boolean"
+    ) {
+      return NextResponse.json({ error: "Invalid dislike" }, { status: 400 });
+    }
+    if (
+      feedback !== undefined &&
+      typeof feedback !== "string"
+    ) {
+      return NextResponse.json({ error: "Invalid feedback" }, { status: 400 });
+    }
 
     const supabase = await createSupabaseClient();
 
@@ -58,6 +76,9 @@ export async function POST(req: NextRequest) {
     if (transcript !== undefined) updatePayload.transcript = transcript;
     if (status !== undefined) updatePayload.status = status;
     if (title !== undefined) updatePayload.title = title;
+    if (like !== undefined) updatePayload.like = like;
+    if (dislike !== undefined) updatePayload.dislike = dislike;
+    if (feedback !== undefined) updatePayload.feedback = feedback;
     if (extractedTitle) updatePayload.title = extractedTitle;
 
     if (Object.keys(updatePayload).length <= 1) {
