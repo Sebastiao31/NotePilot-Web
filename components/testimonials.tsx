@@ -9,6 +9,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from 'embla-carousel-autoplay'
+import Image from 'next/image'
 
 const Testimonials = () => {
 
@@ -144,7 +145,7 @@ const Testimonials = () => {
 
                 <div className="pl-24 pt-18 pb-18 max-w-lg mx-auto bg-[url('/testimonials-bg-img.jpg')] bg-cover bg-center rounded-xl gap-6 flex flex-col justify-center overflow-hidden">
                     <div className="pt-2 pl-2 pb-2 rounded-tl-xl rounded-bl-xl  bg-action/20 hover:scale-105 transition-all duration-300">
-                    <img src="Testimonials-img.png" alt="Testimonials-img" className="w-full rounded-tl-lg rounded-bl-lg" />
+                    <Image src="/Testimonials-img.png" alt="Testimonials-img" className="w-full rounded-tl-lg rounded-bl-lg" width={500} height={500} />
                     </div>
                 </div>
 
