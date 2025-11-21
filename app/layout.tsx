@@ -4,6 +4,7 @@ import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { shadcn } from "@clerk/themes";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({
   variable: "--font-inter",
