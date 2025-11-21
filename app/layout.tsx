@@ -38,6 +38,7 @@ export default function RootLayout({
           className={`${inter.variable} ${geistMono.variable} antialiased`}
         >
           {children}
+          <Analytics />
           <Toaster position="top-right" richColors closeButton />
         </body>
       </html>
