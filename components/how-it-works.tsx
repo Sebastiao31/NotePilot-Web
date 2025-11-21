@@ -20,7 +20,7 @@ export default function HowItWorksSection() {
                     <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
 
                         <div className="flex flex-col items-center mt-8">
-                            <Image src="/hiw/HIW_1.svg" alt="Feature 1" width={358} height={239} />
+                            <Image src="/HIW/HIW_1.svg" alt="Feature 1" width={358} height={239} />
                             <div className=" items-center flex flex-col mt-4">
                                 <h3 className="text-foreground text-lg font-semibold">Transcribe</h3>
                                 <p className="text-muted-foreground mt-1 text-balance text-center max-w-sm">Record or upload. NotePilot will trancribe the content of the choosen source.</p>
@@ -29,7 +29,7 @@ export default function HowItWorksSection() {
                         </div>
 
                         <div className="flex flex-col items-center mt-8">
-                            <Image src="/hiw/HIW_2.svg" alt="Feature 2" width={358} height={239} />
+                            <Image src="/HIW/HIW_2.svg" alt="Feature 2" width={358} height={239} />
                             <div className="items-center flex flex-col mt-4">
                                 <h3 className="text-foreground text-lg font-semibold">Summarize</h3>
                                 <p className="text-muted-foreground mt-1 text-balance text-center max-w-sm">Our AI condenses content into  a clear, readable summary in seconds.</p>
@@ -38,7 +38,7 @@ export default function HowItWorksSection() {
                         </div>
 
                         <div className="flex flex-col items-center mt-8">
-                            <Image src="/hiw/HIW_3.svg" alt="Feature 3" width={358} height={239} />
+                            <Image src="/HIW/HIW_3.svg" alt="Feature 3" width={358} height={239} />
                             <div className="items-center flex flex-col mt-4">
                                 <h3 className="text-foreground text-lg font-semibold">Learn</h3>
                                 <p className="text-muted-foreground mt-1 text-balance text-center max-w-sm">Review, study, practice, chat with your note and actually learn faster.</p>
