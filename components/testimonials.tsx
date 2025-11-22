@@ -66,7 +66,7 @@ const Testimonials = () => {
                         <span className="">Join +100K happy students.</span>
                     </h2>
             </div>
-            <div className=" max-w-[1200px] mx-auto gap-6 pt-12 px-4 ">
+            <div className="md:grid max-w-[1200px] mx-auto gap-6 pt-12 px-4 lg:grid-cols-2">
                 <div className="p-4  items-center justify-center rounded-xl gap-6 flex flex-col">
                     <Carousel className="w-full max-w-lg "
                     plugins={[
@@ -110,7 +110,11 @@ const Testimonials = () => {
                     </Carousel>
                 </div>
 
-                
+                <div className="hidden md:flex pl-24 pt-18 pb-18 max-w-lg mx-auto bg-[url('/Testimonials-bg-img.jpg')] bg-cover bg-center rounded-xl gap-6 flex flex-col justify-center overflow-hidden">
+                    <div className="pt-2 pl-2 pb-2 rounded-tl-xl rounded-bl-xl  bg-action/20 hover:scale-105 transition-all duration-300">
+                    <Image src="/Testimonials-img.png" alt="Testimonials-img" className="w-full rounded-tl-lg rounded-bl-lg" width={500} height={500} />
+                    </div>
+                </div>
 
                 
 
