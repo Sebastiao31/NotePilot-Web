@@ -18,7 +18,7 @@ export default function LogoCloud() {
                                 <img
                                     className="mx-auto mt-4 h-10 w-auto grayscale"
                                     src="/uni-logos/Harvard.png"
-                                    alt="Nvidia Logo"
+                                    alt="Harvard Logo"
                                     height="28"
                                 />
                             </div>
@@ -27,7 +27,7 @@ export default function LogoCloud() {
                                 <img
                                     className="mx-auto h-16 w-auto grayscale"
                                     src="/uni-logos/Michigan.png"
-                                    alt="Column Logo"
+                                    alt="Michigan Logo"
                                     height="28"
                                 />
                             </div>
@@ -35,7 +35,7 @@ export default function LogoCloud() {
                                 <img
                                     className="mx-auto h-16 w-auto grayscale"
                                     src="/uni-logos/Mit.png"
-                                    alt="GitHub Logo"
+                                    alt="MIT Logo"
                                     height="16"
                                 />
                             </div>
@@ -43,7 +43,7 @@ export default function LogoCloud() {
                                 <img
                                     className="mx-auto h-16 w-auto grayscale"
                                     src="/uni-logos/Princeton.png"
-                                    alt="Nike Logo"
+                                    alt="Princeton Logo"
                                     height="20"
                                 />
                             </div>
@@ -51,7 +51,7 @@ export default function LogoCloud() {
                                 <img
                                     className="mx-auto h-16 w-auto grayscale"
                                     src="/uni-logos/Standford.png"
-                                    alt="Lemon Squeezy Logo"
+                                    alt="Standford Logo"
                                     height="20"
                                 />
                             </div>
