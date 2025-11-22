@@ -87,7 +87,7 @@ export default function HeroSection() {
                                             asChild
                                             size="lg"
                                             className="rounded-full px-5 text-base">
-                                            <Link href="#link">
+                                            <Link href="/notes">
                                                 <span className="text-nowrap">Try NotePilot for FREE</span>
                                             </Link>
                                         </Button>

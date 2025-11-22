@@ -20,7 +20,6 @@ export default function LogoCloud() {
                                     src="/uni-logos/Harvard.png"
                                     alt="Nvidia Logo"
                                     height="28"
-                                    width="auto"
                                 />
                             </div>
 
@@ -30,7 +29,6 @@ export default function LogoCloud() {
                                     src="/uni-logos/Michigan.png"
                                     alt="Column Logo"
                                     height="28"
-                                    width="auto"
                                 />
                             </div>
                             <div className="flex">
@@ -39,7 +37,6 @@ export default function LogoCloud() {
                                     src="/uni-logos/Mit.png"
                                     alt="GitHub Logo"
                                     height="16"
-                                    width="auto"
                                 />
                             </div>
                             <div className="flex">
@@ -48,7 +45,6 @@ export default function LogoCloud() {
                                     src="/uni-logos/Princeton.png"
                                     alt="Nike Logo"
                                     height="20"
-                                    width="auto"
                                 />
                             </div>
                             <div className="flex">
@@ -57,7 +53,6 @@ export default function LogoCloud() {
                                     src="/uni-logos/Standford.png"
                                     alt="Lemon Squeezy Logo"
                                     height="20"
-                                    width="auto"
                                 />
                             </div>
                             <div className="flex">
@@ -66,7 +61,6 @@ export default function LogoCloud() {
                                     src="/uni-logos/UPenn.png"
                                     alt="Laravel Logo"
                                     height="16"
-                                    width="auto"
                                 />
                             </div>
                             <div className="flex">
@@ -75,7 +69,6 @@ export default function LogoCloud() {
                                     src="/uni-logos/Yale.png"
                                     alt="Lilly Logo"
                                     height="28"
-                                    width="auto"
                                 />
                             </div>
 
