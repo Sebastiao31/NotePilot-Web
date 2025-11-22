@@ -85,7 +85,7 @@ export  function ChatInput({ value, onChange, onSend, loading, onGenerateQuiz, o
                     <IconInfoCircle className="size-3" />
                   </TooltipTrigger>
                   <TooltipContent className="text-center">
-                    <p>When the scope is ON its will use only <br /> the current note as context, otherwise it the <br /> answer won't be limited to the current note.</p>
+                    <p>When the scope is ON it'll use only <br /> the current note as context, otherwise the <br /> answer won't be limited to the current note.</p>
                   </TooltipContent>
                 </Tooltip>
               Scope:
