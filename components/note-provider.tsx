@@ -10,6 +10,8 @@ type NoteSidebarContextValue = {
   setWidth: (width: number) => void
   minWidth: number
   maxWidth: number
+  drawerOpen: boolean
+  setDrawerOpen: (open: boolean) => void
   selectedFolder: string | null
   setSelectedFolder: (name: string | null) => void
   searchQuery: string
@@ -32,6 +34,7 @@ export function NoteProvider({ children }: { children: React.ReactNode }) {
   const defaultWidth = 320
   const minWidth = defaultWidth
   const maxWidth = defaultWidth
+  const [drawerOpen, setDrawerOpen] = React.useState(false)
   const [width] = React.useState<number>(defaultWidth)
   const setWidth = React.useCallback((_value: number | ((w: number) => number)) => {
     // fixed width; no-op
@@ -43,8 +46,8 @@ export function NoteProvider({ children }: { children: React.ReactNode }) {
   const [searchQuery, setSearchQuery] = React.useState<string>("")
 
   const value = React.useMemo(
-    () => ({ open, setOpen, toggle, width, setWidth, minWidth, maxWidth, selectedFolder, setSelectedFolder, searchQuery, setSearchQuery }),
-    [open, width, setWidth, minWidth, maxWidth, selectedFolder, searchQuery]
+    () => ({ open, setOpen, toggle, width, setWidth, minWidth, maxWidth, drawerOpen, setDrawerOpen, selectedFolder, setSelectedFolder, searchQuery, setSearchQuery }),
+    [open, width, setWidth, minWidth, maxWidth, drawerOpen, selectedFolder, searchQuery]
   )
 
   return (

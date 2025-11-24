@@ -88,9 +88,9 @@ export function NavMain({
   }[]
 }) {
 
-  const { isMobile } = useSidebar()
-  const { toggle } = useNoteSidebar()
-  const { chatToggle } = useChatSidebar()
+  const { isMobile, setOpenMobile } = useSidebar()
+  const { toggle, setDrawerOpen: setNotesDrawerOpen } = useNoteSidebar()
+  const { chatToggle, setDrawerOpen } = useChatSidebar()
   const pathname = usePathname()
   const inNoteContext = React.useMemo(() => {
     if (!pathname) return false
@@ -147,19 +147,38 @@ export function NavMain({
      
         <CreateNoteMenu />
         <SidebarMenuItem>
-          <SidebarMenuButton onClick={toggle} tooltip="Notes">
+          <SidebarMenuButton
+            onClick={() => {
+              if (isMobile) {
+                setOpenMobile(false)
+                setNotesDrawerOpen(true)
+              } else {
+                toggle()
+              }
+            }}
+            tooltip="Notes"
+          >
             <IconFiles className="size-4" />
             <span>Notes</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
 
         {inNoteContext ? (
-          <SidebarMenuItem>
+          <>
+          <SidebarMenuItem className="hidden md:block">
             <SidebarMenuButton onClick={chatToggle} tooltip="Ai Chat">
               <IconMessageCircle className="size-4" />
               <span>Ai Chat</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          
+          <SidebarMenuItem className="block md:hidden">
+            <SidebarMenuButton tooltip="Ai Chat" onClick={() => { if (isMobile) setOpenMobile(false); setDrawerOpen(true) }}>
+              <IconMessageCircle className="size-4" />
+              <span>Ai Chat</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          </>
         ) : null}
       
         

@@ -91,13 +91,13 @@ export function SiteHeader() {
 
     return (
         <header className="sticky top-0 z-50 flex h-12 shrink-0 items-center gap-2 justify-between pr-2 border-b bg-background w-full">
-          <div className="flex items-center gap-2 px-4">
+          <div className="flex items-center gap-2 px-4 min-w-0 flex-1">
             <SidebarTrigger className="-ml-1 md:hidden" />
             <Separator
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4 md:hidden"
             />
-            <span className="text-sm font-medium">
+            <span className="text-sm font-medium truncate" title={noteTitle ?? undefined}>
               {noteTitle}
             </span>
           </div>

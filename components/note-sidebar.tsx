@@ -13,8 +13,15 @@ import { ScrollArea } from "./ui/scroll-area"
 
 
 export function NoteSidebar() {
-  const { open, width, toggle } = useNoteSidebar()
+  const { open, width, toggle, setOpen } = useNoteSidebar()
   const { state, isMobile } = useSidebar()
+
+  // Auto-close note sidebar on mobile screens
+  React.useEffect(() => {
+    if (isMobile && open) {
+      setOpen(false)
+    }
+  }, [isMobile, open, setOpen])
 
 
   const transform = open ? "translateX(0)" : "translateX(-100%)"

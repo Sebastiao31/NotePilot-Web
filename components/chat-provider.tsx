@@ -11,6 +11,8 @@ type ChatSidebarContextValue = {
   setWidth: (width: number) => void
   minWidth: number
   maxWidth: number
+  drawerOpen: boolean
+  setDrawerOpen: (open: boolean) => void
 }
 
 const ChatSidebarContext = React.createContext<ChatSidebarContextValue | null>(null)
@@ -29,6 +31,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const minWidth = 360
   const maxWidth = 720
   const defaultWidth = 384
+  const [drawerOpen, setDrawerOpen] = React.useState(false)
 
   const clamp = React.useCallback((value: number) => {
     return Math.min(maxWidth, Math.max(minWidth, value))
@@ -76,8 +79,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   }, [clamp])
 
   const value = React.useMemo(
-    () => ({ open, setOpen, chatToggle, width, setWidth, minWidth, maxWidth }),
-    [open, width, setWidth, minWidth, maxWidth]
+    () => ({ open, setOpen, chatToggle, width, setWidth, minWidth, maxWidth, drawerOpen, setDrawerOpen }),
+    [open, width, setWidth, minWidth, maxWidth, drawerOpen]
   )
 
   return (

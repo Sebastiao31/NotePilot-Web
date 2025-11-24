@@ -27,6 +27,7 @@ import { IconFileText } from '@tabler/icons-react'
 import { NoteFilter } from '@/components/note-filter'
 import { SearchNotes } from '@/components/search-notes'
 import NoteList from '@/components/note-list'
+import { SiteHeader } from '@/components/site-header'
 
 
 
@@ -38,9 +39,12 @@ export default function NotesPage() {
   const [pdfOpen, setPdfOpen] = useState(false)
 
   return (
-    <main className="p-8 my-8 flex flex-col gap-8 max-w-7xl mx-auto">
+    <main >
+      <div className="block md:hidden">
+        <SiteHeader/>
+      </div>
 
-
+    <div className="p-8 my-8 flex flex-col gap-8 max-w-7xl mx-auto">
     <Empty> 
       <EmptyHeader>
         <EmptyMedia variant="icon">
@@ -134,6 +138,7 @@ export default function NotesPage() {
     
       
     </Empty> 
+    </div>
     
     </main>
   )

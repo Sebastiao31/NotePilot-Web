@@ -8,7 +8,9 @@ import { NoteSidebar } from '@/components/note-sidebar'
 import { ChatProvider } from '@/components/chat-provider'
 import { ChatInset } from '@/components/chat-inset'
 import { ChatSidebar } from '@/components/chat-sidebar'
+import { ChatDrawer } from '@/components/chat-drawer'
 import { EditModeProvider } from '@/components/edit-mode-provider'
+import { NoteDrawer } from '@/components/note-drawer'
 import { UpgradeHeader } from '@/components/upgrade-header'
 
 
@@ -32,7 +34,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </ChatInset>
           </SidebarInset>
           <ChatSidebar />
+          <ChatDrawer />
           <NoteSidebar />
+          <NoteDrawer />
       
           </NoteProvider>
       

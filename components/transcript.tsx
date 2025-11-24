@@ -80,7 +80,7 @@ export function Transcript() {
     return (
         <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost">Transcript</Button>
+          <Button variant="ghost" className="hidden md:block">Transcript</Button>
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
